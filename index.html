@@ -203,7 +203,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
     card.style.cssText='width:100%;margin:0;background:#091b35;border:1px solid #ffffff20;border-radius:10px;overflow:hidden';
     const img=document.createElement('img');
     img.src='./'+file;img.alt='Agastya Junior College – '+label;img.loading='eager';
-    img.style.cssText='display:block;width:100%;height:230px;object-fit:contain;background:#07152e;cursor:zoom-in';
+    img.style.cssText='display:block;width:100%;height:auto;max-height:360px;object-fit:contain;background:#10284b;cursor:zoom-in';
     img.addEventListener('click',()=>window.open('./'+file,'_blank','noopener'));
     const cap=document.createElement('figcaption');
     cap.textContent=label;cap.style.cssText='padding:12px 14px;color:#fff;font:800 12px Manrope';
