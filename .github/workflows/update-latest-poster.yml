@@ -1,0 +1,61 @@
+name: Update latest poster
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.png'
+      - '*.jpg'
+      - '*.jpeg'
+      - '*.webp'
+      - '*.gif'
+      - '*.avif'
+permissions:
+  contents: write
+jobs:
+  update-poster:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Find newly uploaded poster
+        id: poster
+        shell: bash
+        run: |
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.sha }}"
+          if [[ "$BEFORE" =~ ^0+$ ]]; then
+            BEFORE="$(git rev-list --max-count=1 "$AFTER^" 2>/dev/null || true)"
+          fi
+          if [ -n "$BEFORE" ]; then
+            IMAGE="$(git diff --name-only "$BEFORE" "$AFTER" | grep -Ei '\\.(png|jpe?g|webp|gif|avif)$' | tail -n 1 || true)"
+          else
+            IMAGE="$(git ls-tree -r --name-only "$AFTER" | grep -Ei '\\.(png|jpe?g|webp|gif|avif)$' | tail -n 1 || true)"
+          fi
+          if [ -z "$IMAGE" ]; then
+            echo "No image upload found."
+            exit 0
+          fi
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+      - name: Write latest poster manifest
+        if: steps.poster.outputs.image != ''
+        env:
+          IMAGE: ${{ steps.poster.outputs.image }}
+        run: |
+          python - <<'PY'
+          import json, os
+          image = os.environ["IMAGE"]
+          with open("poster.json", "w", encoding="utf-8") as f:
+              json.dump({"image": image, "alt": "Campus Creatives latest poster"}, f)
+          PY
+      - name: Commit poster selection
+        if: steps.poster.outputs.image != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add poster.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update latest website poster"
+            git push
+          fi
