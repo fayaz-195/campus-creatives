@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://campus-creatives.pages.dev/sitemap.xml
