@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '*.png'
+      - '*.PNG'
       - '*.jpg'
       - '*.jpeg'
       - '*.webp'
@@ -29,9 +30,9 @@ jobs:
             BEFORE="$(git rev-list --max-count=1 "$AFTER^" 2>/dev/null || true)"
           fi
           if [ -n "$BEFORE" ]; then
-            IMAGE="$(git diff --name-only "$BEFORE" "$AFTER" | grep -Ei '\\.(png|jpe?g|webp|gif|avif)$' | tail -n 1 || true)"
+            IMAGE="$(git diff --name-only "$BEFORE" "$AFTER" | grep -Ei '\.(png|jpe?g|webp|gif|avif)$' | tail -n 1 || true)"
           else
-            IMAGE="$(git ls-tree -r --name-only "$AFTER" | grep -Ei '\\.(png|jpe?g|webp|gif|avif)$' | tail -n 1 || true)"
+            IMAGE="$(git ls-tree -r --name-only "$AFTER" | grep -Ei '\.(png|jpe?g|webp|gif|avif)$' | tail -n 1 || true)"
           fi
           if [ -z "$IMAGE" ]; then
             echo "No image upload found."
@@ -45,9 +46,8 @@ jobs:
         run: |
           python - <<'PY'
           import json, os
-          image = os.environ["IMAGE"]
           with open("poster.json", "w", encoding="utf-8") as f:
-              json.dump({"image": image, "alt": "Campus Creatives latest poster"}, f)
+              json.dump({"image": os.environ["IMAGE"], "alt": "Campus Creatives latest poster"}, f)
           PY
       - name: Commit poster selection
         if: steps.poster.outputs.image != ''
