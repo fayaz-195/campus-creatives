@@ -62,7 +62,8 @@ $('signupBtn').addEventListener('click',async()=>{
  if(data.session&&data.user){await enter(data.user)}
  else{msg('loginMsg','Account created. Check your email and confirm the address, then return here and sign in.')}
 });
-\n$('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();location.reload()});
+
+$('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();location.reload()});
 sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session?.user&&$('appView').classList.contains('hidden'))enter(session.user)});
 async function refreshAll(){await Promise.all([loadEnquiries(),loadPortfolio(),loadProjects()])}
 function table(headers,rows){return '<table><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+ (rows.length?rows.join(''):'<tr><td colspan="'+headers.length+'" class="empty">Nothing here yet.</td></tr>')+'</tbody></table>'}
