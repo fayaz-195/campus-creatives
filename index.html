@@ -96,7 +96,8 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 <article class="work-card" data-category="web"><div class="work-art web"><div class="web-window"><div class="web-bar"><i></i><i></i><i></i></div><div class="web-content"><strong>YOUR CAMPUS.<br>YOUR FUTURE.</strong><b></b><small>COURSES • CAMPUS • ADMISSIONS</small></div></div></div><div class="work-info"><div class="work-meta"><span>WEB DESIGN</span><span class="concept-label">CONCEPT PROJECT</span></div><h3>Institution Website</h3><p>Modern, mobile-friendly website concepts with course and enquiry information.</p><button class="work-view" type="button" data-title="Institution Website" data-desc="A website concept showing a clean homepage structure for courses, campus information and admission enquiries.">VIEW PROJECT ↗</button></div></article>
 </div><p class="portfolio-note">Featured client entries: The Nano Junior College and Agastya Junior College. Other portfolio tiles are illustrative concept projects. We will add approved project images as they are uploaded.</p>
 </div></section>
-\n<section class="content process" id="process"><div class="wrap"><div class="section-head"><div class="kicker">OUR PROCESS</div><h2>From first thought<br>to final impact.</h2><p>A simple, collaborative process that keeps every project moving with clarity.</p></div><div class="steps"><div class="step"><b>01</b><h3>Discover</h3><p>We understand your institution, audience, goals and requirements.</p></div><div class="step"><b>02</b><h3>Strategise</h3><p>We shape the creative direction and the right communication plan.</p></div><div class="step"><b>03</b><h3>Create</h3><p>We design, produce, review and refine every important detail.</p></div><div class="step"><b>04</b><h3>Connect</h3><p>Your institution reaches people with a clear and consistent identity.</p></div></div></div></section>
+
+<section class="content process" id="process"><div class="wrap"><div class="section-head"><div class="kicker">OUR PROCESS</div><h2>From first thought<br>to final impact.</h2><p>A simple, collaborative process that keeps every project moving with clarity.</p></div><div class="steps"><div class="step"><b>01</b><h3>Discover</h3><p>We understand your institution, audience, goals and requirements.</p></div><div class="step"><b>02</b><h3>Strategise</h3><p>We shape the creative direction and the right communication plan.</p></div><div class="step"><b>03</b><h3>Create</h3><p>We design, produce, review and refine every important detail.</p></div><div class="step"><b>04</b><h3>Connect</h3><p>Your institution reaches people with a clear and consistent identity.</p></div></div></div></section>
 <section class="contact" id="contact"><div class="wrap"><div class="contact-box"><div><div class="eyebrow">HAVE A PROJECT IN MIND?</div><h2>LET'S MAKE<br>IT MEMORABLE.</h2><p>Tell us what your campus needs. We'll help bring the idea to life.</p></div><a class="btn" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">WHATSAPP 8919572195 ↗</a></div></div></section>
 </main>
 <footer><div class="wrap foot"><div><b>CAMPUS <span>CREATIVES</span></b><div style="margin-top:7px">We Create. Colleges Connect.</div></div><div>© 2026 Campus Creatives. All rights reserved.</div></div></footer>
@@ -157,14 +158,51 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   const filter=btn.dataset.filter;
   cards.forEach(card=>card.hidden=filter!=='all'&&card.dataset.category!==filter);
  }));
+
  document.querySelectorAll('.work-view').forEach(btn=>btn.addEventListener('click',()=>{
-  const title=btn.dataset.title,desc=btn.dataset.desc;const projectType=btn.closest('.work-card')?.querySelector('.work-meta .concept-label')?.textContent||'PORTFOLIO PROJECT';
+  const title=btn.dataset.title,desc=btn.dataset.desc;
+  const isAgastya=title.toLowerCase().includes('agastya');
   const panel=document.createElement('div');
-  panel.style.cssText='position:fixed;inset:0;z-index:100;background:#020a18df;display:grid;place-items:center;padding:20px';
-  panel.innerHTML='<div style="max-width:480px;width:100%;padding:30px;border:1px solid #5576a3;border-radius:14px;background:#10284b;box-shadow:0 25px 70px #0009;color:#f8fbff"><div style="color:#ffd329;font-size:10px;font-weight:900;letter-spacing:2px">CAMPUS CREATIVES / CONCEPT PROJECT</div><h2 style="font:900 26px Manrope;margin:15px 0 10px"></h2><p style="color:#c2cee0;line-height:1.8;font-size:14px"></p><button type="button" style="margin-top:12px;background:#ffd329;color:#07152e;border:0;border-radius:5px;padding:12px 18px;font-weight:900;cursor:pointer">CLOSE</button></div>';
-  panel.querySelector('div div').textContent='CAMPUS CREATIVES / '+projectType.toUpperCase();panel.querySelector('h2').textContent=title;panel.querySelector('p').textContent=desc;
-  const close=()=>panel.remove();panel.querySelector('button').addEventListener('click',close);panel.addEventListener('click',e=>{if(e.target===panel)close()});document.body.appendChild(panel);
+  panel.style.cssText='position:fixed;inset:0;z-index:100;background:#020a18ee;display:grid;place-items:center;padding:18px;overflow:auto';
+  const shell=document.createElement('div');
+  shell.style.cssText='max-width:1100px;width:100%;max-height:92vh;overflow:auto;padding:clamp(20px,4vw,36px);border:1px solid #5576a3;border-radius:16px;background:#10284b;box-shadow:0 25px 70px #0009;color:#f8fbff';
+  const top=document.createElement('div');
+  top.style.cssText='display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:20px';
+  const heading=document.createElement('div');
+  const eyebrow=document.createElement('div');
+  eyebrow.style.cssText='color:#ffd329;font-size:10px;font-weight:900;letter-spacing:2px';
+  eyebrow.textContent='CAMPUS CREATIVES / '+(isAgastya?'CLIENT PROJECT':'PORTFOLIO PROJECT');
+  const h=document.createElement('h2');h.textContent=title;h.style.cssText='font:900 clamp(24px,4vw,34px) Manrope;margin:10px 0';
+  const p=document.createElement('p');p.textContent=desc;p.style.cssText='color:#c2cee0;line-height:1.7;font-size:13px;margin:0';
+  heading.append(eyebrow,h,p);
+  const closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.textContent='CLOSE ✕';closeBtn.style.cssText='flex:none;background:#ffd329;color:#07152e;border:0;border-radius:5px;padding:11px 15px;font-weight:900;cursor:pointer';
+  top.append(heading,closeBtn);shell.append(top);
+  if(isAgastya){
+   const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px';
+   const items=[
+    ['Samagamah 2K26','agastya-samagamah-2k26.jpg'],
+    ['Admissions Campaign 2027–28','agastya-admissions-2027-28.jpg'],
+    ['IPE Junior BiPC Results','ipe-junior-bipc-results.jpg'],
+    ['IPE Junior MPC Results','ipe-junior-mpc-results.jpg'],
+    ['IPE Senior BiPC Results','ipe-senior-bipc-results.jpg'],
+    ['IPE Senior MPC Results','ipe-senior-mpc-results.jpg'],
+    ['NEET Results','agastya-neet-results.jpg'],
+    ['IIT JEE & Main Results','agastya-iit-jee-main-results.jpg']
+   ];
+   items.forEach(([label,file])=>{
+    const card=document.createElement('figure');card.style.cssText='margin:0;background:#091b35;border:1px solid #ffffff20;border-radius:10px;overflow:hidden';
+    const img=document.createElement('img');img.src='./'+file;img.alt='Agastya Junior College – '+label;img.loading='lazy';img.style.cssText='display:block;width:100%;height:280px;object-fit:contain;background:#07152e;cursor:zoom-in';
+    img.addEventListener('click',()=>window.open('./'+file,'_blank','noopener'));
+    const cap=document.createElement('figcaption');cap.textContent=label;cap.style.cssText='padding:12px 14px;color:#fff;font:800 12px Manrope';
+    card.append(img,cap);grid.append(card);
+   });
+   shell.append(grid);
+  }
+  const close=()=>panel.remove();closeBtn.addEventListener('click',close);panel.addEventListener('click',e=>{if(e.target===panel)close()});
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',esc)}});
+  panel.append(shell);document.body.appendChild(panel);
  }));
 })();
 </script>
-\n</body></html>
+
+</body></html>
