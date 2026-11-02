@@ -178,7 +178,8 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   const closeBtn=document.createElement('button');closeBtn.type='button';closeBtn.textContent='CLOSE ✕';closeBtn.style.cssText='flex:none;background:#ffd329;color:#07152e;border:0;border-radius:5px;padding:11px 15px;font-weight:900;cursor:pointer';
   top.append(heading,closeBtn);shell.append(top);
   if(isAgastya){
-   const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;align-items:start;'
+   const grid=document.createElement('div');
+   grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;align-items:start';
    const items=[
     ['Samagamah 2K26','agastya-samagamah-2k26.jpg'],
     ['Admissions Campaign 2027–28','agastya-admissions-2027-28.jpg'],
@@ -189,12 +190,32 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
     ['NEET Results','agastya-neet-results.jpg'],
     ['IIT JEE & Main Results','agastya-iit-jee-main-results.jpg']
    ];
+   const colCount=Math.max(1,Math.min(4,Math.floor((shell.clientWidth-40+12)/244)));
+   grid.style.gridTemplateColumns='repeat('+colCount+',minmax(0,1fr))';
+   const cols=[];
+   for(let i=0;i<colCount;i++){
+    const col=document.createElement('div');
+    col.style.cssText='display:flex;flex-direction:column;gap:12px;min-width:0';
+    cols.push(col);grid.append(col);
+   }
    items.forEach(([label,file])=>{
-    const card=document.createElement('figure');card.style.cssText='width:100%;margin:0;background:#091b35;border:1px solid #ffffff20;border-radius:10px;overflow:hidden;align-self:start'
-    const img=document.createElement('img');img.src='./'+file;img.alt='Agastya Junior College – '+label;img.loading='lazy';img.style.cssText='display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#07152e;cursor:zoom-in';
+    const card=document.createElement('figure');
+    card.style.cssText='width:100%;margin:0;background:#091b35;border:1px solid #ffffff20;border-radius:10px;overflow:hidden';
+    const img=document.createElement('img');
+    img.src='./'+file;img.alt='Agastya Junior College – '+label;img.loading='eager';
+    img.style.cssText='display:block;width:100%;height:auto;object-fit:contain;background:#07152e;cursor:zoom-in';
     img.addEventListener('click',()=>window.open('./'+file,'_blank','noopener'));
-    const cap=document.createElement('figcaption');cap.textContent=label;cap.style.cssText='padding:12px 14px;color:#fff;font:800 12px Manrope';
-    card.append(img,cap);grid.append(card);
+    const cap=document.createElement('figcaption');
+    cap.textContent=label;cap.style.cssText='padding:12px 14px;color:#fff;font:800 12px Manrope';
+    card.append(img,cap);
+    const placeCard=()=>{
+     if(card.dataset.placed)return;
+     card.dataset.placed='1';
+     const shortest=cols.reduce((best,col)=>col.getBoundingClientRect().height<best.getBoundingClientRect().height?col:best,cols[0]);
+     shortest.append(card);
+    };
+    img.addEventListener('load',placeCard,{once:true});
+    img.addEventListener('error',placeCard,{once:true});
    });
    shell.append(grid);
   }
