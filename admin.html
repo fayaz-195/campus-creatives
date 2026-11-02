@@ -17,6 +17,7 @@
  <div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN CONSOLE</small></div></div>
  <div class="eyebrow">Secure workspace</div><h1>Welcome back.</h1><p class="sub">Sign in with your approved administrator account to manage your studio.</p>
  <form id="loginForm"><div class="field"><label>Email address</label><input id="email" type="email" required autocomplete="username" placeholder="admin@yourdomain.com"></div><div class="field"><label>Password</label><input id="password" type="password" required autocomplete="current-password" placeholder="Enter password"></div><button class="btn full" id="loginBtn">Sign in to dashboard</button></form>
+ <button class="btn light full" id="signupBtn" type="button">Create my admin account</button>
  <div id="loginMsg" class="msg"></div><div class="notice">Access is restricted to approved admin accounts. New accounts are not automatically granted administrator access.</div>
 </div></div>
 <div id="appView" class="shell hidden">
@@ -47,9 +48,21 @@ function openModal(id){$(id).classList.remove('hidden')}function closeModal(id){
 function showPage(page){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(page).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('pageTitle').textContent=({overview:'Overview',enquiries:'Enquiries',portfolio:'Portfolio',projects:'Client Projects',uploads:'Asset Library'})[page];if(page==='enquiries')loadEnquiries();if(page==='portfolio')loadPortfolio();if(page==='projects')loadProjects();if(page==='uploads')loadAssets()}
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 async function checkAdmin(user){const {data,error}=await sb.from('admin_users').select('user_id,email').eq('user_id',user.id).maybeSingle();if(error)throw error;if(!data)throw new Error('Your account is signed in, but it has not been approved as an administrator yet. Ask the project owner to approve this email: '+user.email);return data}
-async function enter(user){currentUser=user;try{await checkAdmin(user);$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userEmail').textContent=user.email;await refreshAll()}catch(e){await sb.auth.signOut();msg('loginMsg',e.message)}}
+async function enter(user){currentUser=user;try{if((user.email||'').toLowerCase()==='fayazfotography@gmail.com'){const {error:regErr}=await sb.from('admin_users').insert({user_id:user.id,email:user.email.toLowerCase()});if(regErr && !String(regErr.message).toLowerCase().includes('duplicate'))throw regErr;}await checkAdmin(user);$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userEmail').textContent=user.email;await refreshAll()}catch(e){await sb.auth.signOut();msg('loginMsg',e.message)}}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;$('loginBtn').textContent='Signing in…';msg('loginMsg','');const {data,error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});$('loginBtn').disabled=false;$('loginBtn').textContent='Sign in to dashboard';if(error){msg('loginMsg',error.message);return}await enter(data.user)});
-$('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();location.reload()});
+
+$('signupBtn').addEventListener('click',async()=>{
+ const email=$('email').value.trim().toLowerCase(), password=$('password').value;
+ if(email!=='fayazfotography@gmail.com'){msg('loginMsg','Admin registration is restricted to the approved owner email.');return}
+ if(password.length<8){msg('loginMsg','Please enter a password with at least 8 characters.');return}
+ $('signupBtn').disabled=true;$('signupBtn').textContent='Creating account…';
+ const {data,error}=await sb.auth.signUp({email,password});
+ $('signupBtn').disabled=false;$('signupBtn').textContent='Create my admin account';
+ if(error){msg('loginMsg',error.message);return}
+ if(data.session&&data.user){await enter(data.user)}
+ else{msg('loginMsg','Account created. Check your email and confirm the address, then return here and sign in.')}
+});
+\n$('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();location.reload()});
 sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session?.user&&$('appView').classList.contains('hidden'))enter(session.user)});
 async function refreshAll(){await Promise.all([loadEnquiries(),loadPortfolio(),loadProjects()])}
 function table(headers,rows){return '<table><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+ (rows.length?rows.join(''):'<tr><td colspan="'+headers.length+'" class="empty">Nothing here yet.</td></tr>')+'</tbody></table>'}
