@@ -60,10 +60,66 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 @keyframes ambientRotate{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none} .hero:after{animation:none}}
 
+
+/* Complete agency upgrade */
+:root{--gold-glow:#ffd32955}
+::selection{background:#ffd329;color:#07152e}
+:focus-visible{outline:2px solid var(--yellow);outline-offset:4px}
+.nav-toggle{display:none;width:44px;height:44px;border:1px solid #54719a;border-radius:8px;background:#ffffff0b;color:#fff;font-size:22px;cursor:pointer}
+.section-head h2{text-wrap:balance}
+.work-card{position:relative;transform:translateZ(0)}
+.work-card:after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,transparent 20%,#ffffff0a 48%,transparent 70%);transform:translateX(-130%);transition:transform .8s}
+.work-card:hover:after{transform:translateX(130%)}
+.faq-section{padding:95px 0;background:linear-gradient(180deg,#091b36,#06142c)}
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:55px;align-items:start}
+.faq-list{display:grid;gap:11px}
+.faq-item{border:1px solid #2b466b;border-radius:10px;background:#0c2141;overflow:hidden}
+.faq-item summary{list-style:none;cursor:pointer;padding:19px 22px;font:800 14px Manrope;display:flex;justify-content:space-between;gap:15px;align-items:center}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary:after{content:"+";color:var(--yellow);font-size:22px}
+.faq-item[open] summary:after{content:"−"}
+.faq-item p{padding:0 22px 20px;margin:0;color:#afc0d8;font-size:13px;line-height:1.8}
+.contact{background:radial-gradient(ellipse at 15% 50%,#145bd722,transparent 45%)}
+.contact-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:28px;align-items:stretch}
+.contact-box{height:100%;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.contact-box .btn{margin-top:12px}
+.enquiry-card{padding:clamp(24px,4vw,38px);border-radius:16px;background:linear-gradient(145deg,#10294d,#0a1b35);border:1px solid #385a85;box-shadow:0 25px 65px #0003}
+.enquiry-card h3{font:900 25px Manrope;margin:0 0 8px}
+.enquiry-card>p{color:#aebed5;font-size:13px;line-height:1.7;margin-bottom:24px}
+.enquiry-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-field{display:grid;gap:7px}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-size:10px;font-weight:900;letter-spacing:1px;color:#d8e4f5}
+.form-field input,.form-field select,.form-field textarea{width:100%;border:1px solid #385779;border-radius:7px;background:#071831;color:#fff;padding:13px 14px;font:500 13px 'DM Sans';outline:none;transition:border-color .2s,box-shadow .2s}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--yellow);box-shadow:0 0 0 3px #ffd32918}
+.form-field input::placeholder,.form-field textarea::placeholder{color:#778da9}
+.form-field select option{background:#071831;color:#fff}
+.form-field textarea{min-height:100px;resize:vertical}
+.enquiry-form .btn{border:0;cursor:pointer;min-height:48px}
+.form-note{grid-column:1/-1;color:#8298b8;font-size:10px;line-height:1.6;margin:0}
+.contact-points{display:grid;gap:12px;margin-top:24px}
+.contact-point{display:flex;gap:12px;align-items:center;color:#d7e4f8;font-size:12px}
+.contact-point b{display:grid;place-items:center;width:34px;height:34px;border:1px solid #ffd32966;border-radius:9px;color:var(--yellow)}
+#whatsFloat{position:fixed;left:22px;bottom:22px;z-index:44;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:#20c66a;color:#062416;font-size:23px;font-weight:900;box-shadow:0 10px 30px #0006;transition:transform .25s,box-shadow .25s}
+#whatsFloat:hover{transform:translateY(-5px) scale(1.05);box-shadow:0 15px 36px #20c66a55}
+@media(max-width:850px){
+ .nav{position:relative;gap:12px}.nav-toggle{display:grid;place-items:center;order:4}
+ .navlinks{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;padding:15px 18px;background:#071831f7;border:1px solid #ffffff20;border-radius:0 0 12px 12px;box-shadow:0 20px 40px #0007;flex-direction:column;gap:0}
+ .navlinks.open{display:flex}.navlinks a{padding:13px 5px;border-bottom:1px solid #ffffff12}.navlinks a:last-child{border:0}
+ .phone-link{margin-left:auto}.nav>.btn{display:none}
+ .faq-grid,.contact-layout{grid-template-columns:1fr;gap:24px}
+}
+@media(max-width:560px){
+ .nav-toggle{width:40px;height:40px}.phone-link{font-size:10px}
+ .enquiry-form{grid-template-columns:1fr}.form-field.full{grid-column:auto}
+ .faq-section{padding:72px 0}
+ #whatsFloat{left:14px;bottom:14px;width:48px;height:48px}
+}
+@media(prefers-reduced-motion:reduce){.work-card:after{transition:none!important}}
 </style>
 </head>
 <body>
-<header><div class="wrap nav"><a class="brand" href="#"><img src="campus-creatives-logo.webp" alt="Campus Creatives original logo"><span class="brand-word">CAMPUS <span class="yellow">CREATIVES</span><small>WE CREATE. COLLEGES CONNECT.</small></span></a><nav class="navlinks"><a href="#">HOME</a><a href="#about">ABOUT</a><a href="#services">SERVICES</a><a href="#works">WORKS</a><a href="#clients">PARTNERS</a><a href="#process">PROCESS</a><a href="#contact">CONTACT</a></nav><a class="phone-link" href="tel:+918919572195">8919572195</a><a class="btn" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">LET'S TALK ↗</a></div></header>
+<header><div class="wrap nav"><a class="brand" href="#"><img src="campus-creatives-logo.webp" alt="Campus Creatives original logo"><span class="brand-word">CAMPUS <span class="yellow">CREATIVES</span><small>WE CREATE. COLLEGES CONNECT.</small></span></a><nav class="navlinks" id="primaryNav"><a href="#">HOME</a><a href="#about">ABOUT</a><a href="#services">SERVICES</a><a href="#works">WORKS</a><a href="#clients">PARTNERS</a><a href="#process">PROCESS</a><a href="#contact">CONTACT</a></nav><a class="phone-link" href="tel:+918919572195">8919572195</a><a class="btn" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">LET'S TALK ↗</a><button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primaryNav">☰</button></div></header>
 <main>
 <section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">YOUR EDUCATION BRANDING PARTNER</div><h1>WE CREATE.<span>COLLEGES CONNECT.</span></h1><p class="hero-copy">We turn ideas into unforgettable campus experiences. From premium print design to digital campaigns, branding and visual storytelling — we help educational institutions stand out.</p><div class="hero-actions"><a class="btn" href="#services">EXPLORE OUR WORK ↓</a><a class="btn ghost" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">START A PROJECT ↗</a></div><div class="micro-note">DESIGN <b>•</b> PRINT <b>•</b> DIGITAL <b>•</b> BRANDING</div></div>
 <div class="artboard" aria-label="Animated creative design artwork"><div class="art-glow"></div><div class="orbit"></div><div class="orbit two"></div><div class="spark s1">✦</div><div class="spark s2">✧</div><div class="creative-card poster-float"><img id="heroPoster" src="campus-creatives-poster.webp.png" alt="Campus Creatives digital marketing solutions poster"></div><div class="float-tile tile-a"><strong>360°</strong><small>CREATIVE SOLUTIONS</small></div><div class="float-tile tile-b"><strong>IDEA → IMPACT</strong><small>WE BRING BRANDS TO LIFE</small></div></div></div></section>
@@ -98,7 +154,8 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 </div></section>
 
 <section class="content process" id="process"><div class="wrap"><div class="section-head"><div class="kicker">OUR PROCESS</div><h2>From first thought<br>to final impact.</h2><p>A simple, collaborative process that keeps every project moving with clarity.</p></div><div class="steps"><div class="step"><b>01</b><h3>Discover</h3><p>We understand your institution, audience, goals and requirements.</p></div><div class="step"><b>02</b><h3>Strategise</h3><p>We shape the creative direction and the right communication plan.</p></div><div class="step"><b>03</b><h3>Create</h3><p>We design, produce, review and refine every important detail.</p></div><div class="step"><b>04</b><h3>Connect</h3><p>Your institution reaches people with a clear and consistent identity.</p></div></div></div></section>
-<section class="contact" id="contact"><div class="wrap"><div class="contact-box"><div><div class="eyebrow">HAVE A PROJECT IN MIND?</div><h2>LET'S MAKE<br>IT MEMORABLE.</h2><p>Tell us what your campus needs. We'll help bring the idea to life.</p></div><a class="btn" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">WHATSAPP 8919572195 ↗</a></div></div></section>
+<section class="faq-section" id="faq"><div class="wrap faq-grid"><div class="section-head"><div class="kicker">QUICK ANSWERS</div><h2>Good questions.<br>Clear answers.</h2><p>Everything starts with understanding your institution and what you want to achieve.</p><a class="btn ghost" href="#contact">ASK US DIRECTLY ↗</a></div><div class="faq-list"><details class="faq-item"><summary>What services does Campus Creatives offer?</summary><p>Graphic design and printing, digital marketing, reels and video production, photography, campus branding, event promotions, websites and institution essentials.</p></details><details class="faq-item"><summary>Can we request a complete admission campaign?</summary><p>Yes. Share your admission goals, course details, audience and timeline. We can discuss a coordinated set of print and digital creatives.</p></details><details class="faq-item"><summary>Do you work with schools and junior colleges?</summary><p>Our creative focus is educational institutions, including schools, junior colleges and campus brands.</p></details><details class="faq-item"><summary>How do we get a quotation?</summary><p>Send your institution name, required services, scope and target date through the enquiry form. We will receive the details on WhatsApp and can discuss next steps.</p></details></div></div></section>
+<section class="contact" id="contact"><div class="wrap contact-layout"><div class="contact-box"><div class="eyebrow">HAVE A PROJECT IN MIND?</div><h2>LET'S MAKE<br>IT MEMORABLE.</h2><p>Tell us what your campus needs. We'll help bring the idea to life.</p><div class="contact-points"><div class="contact-point"><b>☎</b><span>Call / WhatsApp: <strong>8919572195</strong></span></div><div class="contact-point"><b>✦</b><span>Creative solutions for educational institutions</span></div></div><a class="btn" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">CHAT ON WHATSAPP ↗</a></div><div class="enquiry-card"><h3>Start a project enquiry</h3><p>Share a few details. Your enquiry will open in WhatsApp, ready for you to send.</p><form class="enquiry-form" id="projectEnquiry"><div class="form-field"><label for="enqName">YOUR NAME *</label><input id="enqName" name="name" required placeholder="Name"></div><div class="form-field"><label for="enqCollege">INSTITUTION *</label><input id="enqCollege" name="institution" required placeholder="School / College name"></div><div class="form-field"><label for="enqPhone">PHONE NUMBER</label><input id="enqPhone" name="phone" inputmode="tel" placeholder="Your contact number"></div><div class="form-field"><label for="enqService">SERVICE REQUIRED *</label><select id="enqService" name="service" required><option value="">Choose a service</option><option>Graphic Design & Printing</option><option>Digital Marketing</option><option>Reels & Video Production</option><option>Photography & Videography</option><option>Campus Branding</option><option>Events & Promotions</option><option>Website Development</option><option>Complete Creative Support</option><option>Other / Not sure</option></select></div><div class="form-field full"><label for="enqMessage">PROJECT DETAILS</label><textarea id="enqMessage" name="message" placeholder="Tell us what you need and your preferred timeline"></textarea></div><button class="btn full" type="submit">SEND ENQUIRY ON WHATSAPP ↗</button><p class="form-note">Your details are not submitted to this website server. WhatsApp opens with a prepared message for you to review and send.</p></form></div></div></section>
 </main>
 <footer><div class="wrap foot"><div><b>CAMPUS <span>CREATIVES</span></b><div style="margin-top:7px">We Create. Colleges Connect.</div></div><div>© 2026 Campus Creatives. All rights reserved.</div></div></footer>
 
@@ -226,4 +283,30 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 })();
 </script>
 
+<script>
+(()=>{
+ const toggle=document.querySelector('.nav-toggle'),nav=document.getElementById('primaryNav');
+ if(toggle&&nav){
+  toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');toggle.textContent=open?'×':'☰';});
+  nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation');toggle.textContent='☰';}));
+  document.addEventListener('click',e=>{if(!nav.contains(e.target)&&!toggle.contains(e.target)){nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.textContent='☰';}});
+ }
+ const form=document.getElementById('projectEnquiry');
+ if(form)form.addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!form.reportValidity())return;
+  const d=new FormData(form);
+  const message=['Hello Campus Creatives! I would like to discuss a project.','Name: '+d.get('name'),'Institution: '+d.get('institution'),'Phone: '+(d.get('phone')||'Not provided'),'Service: '+d.get('service'),'Project details: '+(d.get('message')||'Not provided')].join('\n');
+  window.open('https://wa.me/918919572195?text='+encodeURIComponent(message),'_blank','noopener');
+ });
+ const float=document.createElement('a');
+ float.id='whatsFloat';float.href='https://wa.me/918919572195?text=Hello%20Campus%20Creatives';float.target='_blank';float.rel='noopener';float.setAttribute('aria-label','Chat with Campus Creatives on WhatsApp');float.innerHTML='✆';document.body.appendChild(float);
+ const motionOK=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(motionOK&&'IntersectionObserver'in window){
+  const extra=document.querySelectorAll('.faq-item,.enquiry-card,.contact-point');
+  const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');io.unobserve(entry.target);}}),{threshold:.1});
+  extra.forEach(el=>{el.classList.add('reveal');io.observe(el);});
+ }
+})();
+</script>
 </body></html>
