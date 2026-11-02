@@ -158,11 +158,11 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   cards.forEach(card=>card.hidden=filter!=='all'&&card.dataset.category!==filter);
  }));
  document.querySelectorAll('.work-view').forEach(btn=>btn.addEventListener('click',()=>{
-  const title=btn.dataset.title,desc=btn.dataset.desc;
+  const title=btn.dataset.title,desc=btn.dataset.desc;const projectType=btn.closest('.work-card')?.querySelector('.work-meta .concept-label')?.textContent||'PORTFOLIO PROJECT';
   const panel=document.createElement('div');
   panel.style.cssText='position:fixed;inset:0;z-index:100;background:#020a18df;display:grid;place-items:center;padding:20px';
   panel.innerHTML='<div style="max-width:480px;width:100%;padding:30px;border:1px solid #5576a3;border-radius:14px;background:#10284b;box-shadow:0 25px 70px #0009;color:#f8fbff"><div style="color:#ffd329;font-size:10px;font-weight:900;letter-spacing:2px">CAMPUS CREATIVES / CONCEPT PROJECT</div><h2 style="font:900 26px Manrope;margin:15px 0 10px"></h2><p style="color:#c2cee0;line-height:1.8;font-size:14px"></p><button type="button" style="margin-top:12px;background:#ffd329;color:#07152e;border:0;border-radius:5px;padding:12px 18px;font-weight:900;cursor:pointer">CLOSE</button></div>';
-  panel.querySelector('h2').textContent=title;panel.querySelector('p').textContent=desc;
+  panel.querySelector('div div').textContent='CAMPUS CREATIVES / '+projectType.toUpperCase();panel.querySelector('h2').textContent=title;panel.querySelector('p').textContent=desc;
   const close=()=>panel.remove();panel.querySelector('button').addEventListener('click',close);panel.addEventListener('click',e=>{if(e.target===panel)close()});document.body.appendChild(panel);
  }));
 })();
