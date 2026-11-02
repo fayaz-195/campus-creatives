@@ -16,8 +16,8 @@
 <div id="loginView" class="login-wrap"><div class="login-card">
  <div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN CONSOLE</small></div></div>
  <div class="eyebrow">Secure workspace</div><h1>Welcome back.</h1><p class="sub">Sign in with your approved administrator account to manage your studio.</p>
- <div class="field"><label>Registered mobile number</label><input id="phone" type="tel" value="+918919572195" readonly></div><div class="field"><label>Fixed test OTP</label><input id="otp" type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit OTP"></div><button class="btn full" id="sendOtpBtn" type="button">Send OTP</button><button class="btn light full" id="verifyOtpBtn" type="button">Verify OTP & Sign in</button>
- <div id="loginMsg" class="msg"></div><div class="notice">Free test mode: only the configured owner test number can sign in. This is not real SMS delivery.</div>
+ <div class="field"><label>Administrator PIN</label><input id="adminPin" type="password" inputmode="text" autocomplete="current-password" minlength="12" placeholder="Enter your secure PIN" required></div><button class="btn full" id="pinLoginBtn" type="button">Unlock Admin Console</button>
+ <div id="loginMsg" class="msg"></div><div class="notice">Private administrator access. Your PIN is verified securely by Supabase Authentication and is never stored in this page.</div>
 </div></div>
 <div id="appView" class="shell hidden">
  <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div></div>
@@ -47,22 +47,16 @@ function openModal(id){$(id).classList.remove('hidden')}function closeModal(id){
 function showPage(page){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(page).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('pageTitle').textContent=({overview:'Overview',enquiries:'Enquiries',portfolio:'Portfolio',projects:'Client Projects',uploads:'Asset Library'})[page];if(page==='enquiries')loadEnquiries();if(page==='portfolio')loadPortfolio();if(page==='projects')loadProjects();if(page==='uploads')loadAssets()}
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 async function checkAdmin(user){const {data,error}=await sb.from('admin_users').select('user_id,email,phone').eq('user_id',user.id).maybeSingle();if(error)throw error;if(!data)throw new Error('Your account is signed in, but it has not been approved as an administrator yet. Ask the project owner to approve this email: '+user.email);return data}
-async function enter(user){currentUser=user;try{if(user.phone==='+918919572195'){const {error:regErr}=await sb.from('admin_users').insert({user_id:user.id,phone:user.phone,email:null});if(regErr && !String(regErr.message).toLowerCase().includes('duplicate'))throw regErr;}await checkAdmin(user);$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userEmail').textContent=user.phone||user.email||'Admin';await refreshAll()}catch(e){await sb.auth.signOut();msg('loginMsg',e.message)}}
-$('sendOtpBtn').addEventListener('click',async()=>{
- const phone=$('phone').value;
- msg('loginMsg','Sending test OTP…');
- const {error}=await sb.auth.signInWithOtp({phone,options:{shouldCreateUser:true}});
- if(error){msg('loginMsg',error.message);return}
- msg('loginMsg','Test OTP request sent. Enter the configured fixed code.');
-});
-$('verifyOtpBtn').addEventListener('click',async()=>{
- const phone=$('phone').value, token=$('otp').value.trim();
- if(!/^\\d{6}$/.test(token)){msg('loginMsg','Enter the 6-digit OTP.');return}
- msg('loginMsg','Verifying OTP…');
- const {data,error}=await sb.auth.verifyOtp({phone,token,type:'sms'});
- if(error){msg('loginMsg',error.message);return}
+async function enter(user){currentUser=user;try{await checkAdmin(user);$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userEmail').textContent='Admin';await refreshAll()}catch(e){await sb.auth.signOut();msg('loginMsg',e.message)}}
+$('pinLoginBtn').addEventListener('click',async()=>{
+ const pin=$('adminPin').value;
+ if(pin.length<12){msg('loginMsg','Use a secure PIN/passphrase with at least 12 characters.');return}
+ msg('loginMsg','Verifying administrator access…');
+ const {data,error}=await sb.auth.signInWithPassword({email:'fayazfotography@gmail.com',password:pin});
+ if(error){msg('loginMsg','Sign-in failed. Check your PIN or administrator account.');return}
  if(data.user)await enter(data.user);
 });
+$('adminPin').addEventListener('keydown',e=>{if(e.key==='Enter')$('pinLoginBtn').click()});
 $('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();location.reload()});
 sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session?.user&&$('appView').classList.contains('hidden'))enter(session.user)});
 async function refreshAll(){await Promise.all([loadEnquiries(),loadPortfolio(),loadProjects()])}
