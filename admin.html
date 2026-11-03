@@ -549,7 +549,9 @@ async function loadBrandProfiles(){
  });
 }
 $('brandSelect').addEventListener('change',()=>{
- const b=brandProfiles.find(x=>x.id===$('brandSelect').value);const f=$('brandForm');f.reset();
+ const selectedId=$('brandSelect').value;
+ const b=brandProfiles.find(x=>String(x.id)===String(selectedId));const f=$('brandForm');f.reset();
+ $('brandSelect').value=selectedId;
  const preview=$('brandLogoPreview');
  if(preview)preview.innerHTML=b&&b.logo_url?'<img src="'+esc(b.logo_url)+'" alt="Saved client logo" style="max-width:180px;max-height:90px;object-fit:contain;border:1px solid #e5e7eb;border-radius:8px;padding:6px;background:#fff"><small>Saved logo</small>':'<span class="muted">No saved logo for this brand. Upload and save one.</span>';
  if(!b)return;
