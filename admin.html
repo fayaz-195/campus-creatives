@@ -450,7 +450,7 @@ td b{color:#1c2c47;font-weight:700}
    <form id="brandForm">
     <div class="field"><label>Choose saved client</label><select id="brandSelect"><option value="">New brand profile</option></select></div>
     <div class="field"><label>Client / Institution name</label><input name="brand_name" required placeholder="e.g. Agastya Junior College"></div>
-    <div class="field"><label>Logo file</label><input id="brandLogo" type="file" accept="image/png,image/jpeg,image/webp"></div>
+    <div class="field"><label>Logo file</label><input id="brandLogo" type="file" accept="image/png,image/jpeg,image/webp"><div id="brandLogoPreview" style="margin-top:10px;min-height:54px;display:flex;align-items:center;gap:12px"><span class="muted">No saved logo preview</span></div></div>
     <div class="field"><label>Mobile number</label><input name="phone" placeholder="+91 ..."></div>
     <div class="field"><label>Website</label><input name="website" placeholder="https://..."></div>
     <div class="field"><label>Address</label><textarea name="address" rows="2" placeholder="Full address"></textarea></div>
@@ -550,6 +550,8 @@ async function loadBrandProfiles(){
 }
 $('brandSelect').addEventListener('change',()=>{
  const b=brandProfiles.find(x=>x.id===$('brandSelect').value);const f=$('brandForm');f.reset();
+ const preview=$('brandLogoPreview');
+ if(preview)preview.innerHTML=b&&b.logo_url?'<img src="'+esc(b.logo_url)+'" alt="Saved client logo" style="max-width:180px;max-height:90px;object-fit:contain;border:1px solid #e5e7eb;border-radius:8px;padding:6px;background:#fff"><small>Saved logo</small>':'<span class="muted">No saved logo for this brand. Upload and save one.</span>';
  if(!b)return;
  ['brand_name','phone','website','address','primary_color','secondary_color','language'].forEach(k=>{if(f.elements[k])f.elements[k].value=b[k]||''});
 });
@@ -559,13 +561,14 @@ $('brandForm').addEventListener('submit',async e=>{
  const id=$('brandSelect').value;const file=$('brandLogo').files[0];
  if(file){if(file.size>5*1024*1024){msg('brandMsg','Logo must be 5 MB or smaller.');return}
   const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path='brand-logos/'+Date.now()+'-'+safe;
-  const up=await sb.storage.from('cc-assets').upload(path,file,{upsert:false});if(up.error){msg('brandMsg',up.error.message);return}
+  const up=await sb.storage.from('cc-assets').upload(path,file,{upsert:false});if(up.error){msg('brandMsg','Logo upload failed: '+up.error.message);return}
   v.logo_url=sb.storage.from('cc-assets').getPublicUrl(up.data.path).data.publicUrl;
- }
+ } else if(id){const existing=brandProfiles.find(b=>b.id===id);if(existing&&existing.logo_url)v.logo_url=existing.logo_url;}
+
  msg('brandMsg','Saving brand profile…');
  const result=id?await sb.from('creative_brand_profiles').update(v).eq('id',id):await sb.from('creative_brand_profiles').insert(v);
  if(result.error){msg('brandMsg',result.error.message);return}
- f.reset();$('brandSelect').value='';msg('brandMsg','Brand profile saved.');await loadBrandProfiles();
+ f.reset();$('brandSelect').value='';$('brandLogo').value='';$('brandLogoPreview').innerHTML='<span class="muted">Select the saved brand to preview its logo.</span>';msg('brandMsg',v.logo_url?'Brand profile and logo saved.':'Brand profile saved without a logo.');await loadBrandProfiles();
 });
 $('generateDesignBtn').addEventListener('click',()=>{
  const prompt=$('designPrompt').value.trim();if(!prompt){msg('designerMsg','Please describe the poster or calendar first.');return}
