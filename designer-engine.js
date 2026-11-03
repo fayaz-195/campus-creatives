@@ -35,7 +35,16 @@
   x.fillStyle=muted;x.font='600 '+Math.round(w*.012)+'px Arial';x.fillText('OFFICIAL CREATIVE',pad+w*.035,h*.143);
   // Decorative side label
   x.save();x.translate(w*.94,h*.54);x.rotate(Math.PI/2);x.fillStyle=a;x.font='700 '+Math.round(w*.013)+'px Arial';x.fillText('CAMPUS CREATIVES  •  DESIGN STUDIO',0,0);x.restore();
-  const title=prompt.split(/[.!?\n]/)[0].trim().toUpperCase();
+  function makeHeadline(raw){
+   if(/admission/i.test(raw)) return /open/i.test(raw) ? 'ADMISSIONS OPEN' : 'ADMISSIONS OPEN';
+   if(/calendar/i.test(raw)) return 'ACADEMIC CALENDAR';
+   if(/scholarship/i.test(raw)) return 'SCHOLARSHIP PROGRAM';
+   if(/exam|test/i.test(raw)) return 'EXAM NOTIFICATION';
+   let t=raw.replace(/^(please\\s+)?(create|make|design|generate|prepare)\\s+(a|an|the)?\\s*/i,'');
+   t=t.replace(/\\b(poster|design|use|using|with|branding|brand|logo|colours?|colors?|for|based on)\\b/ig,' ').replace(/\\s+/g,' ').trim();
+   return (t||'YOUR HEADLINE').slice(0,52).toUpperCase();
+  }
+  const title=makeHeadline(prompt);
   const titleSize=Math.round(w*(isBold ? 0.082 : 0.070)),titleFont='900 '+titleSize+'px Arial';
   const titleLines=wrap(x,title,w*.79,titleFont).slice(0,4);
   let y=h*(/calendar/i.test(type)?.235:.34);
@@ -43,7 +52,7 @@
   x.fillStyle=fg;x.font=titleFont;
   titleLines.forEach(line=>{x.fillText(line,pad,y);y+=titleSize*1.04});
   // Supporting copy in a clean card
-  const detail=($('designText').value||prompt).trim(),cardY=Math.max(y+w*.045,h*.53),cardH=Math.min(h*.23,h-cardY-w*.22);
+  const detail=$('designText').value.trim(),cardY=Math.max(y+w*.045,h*.53),cardH=Math.min(h*.23,h-cardY-w*.22);
   rr(x,pad,cardY,w*.79,cardH,w*.018,isLight?'#ffffff':'#ffffff12',isLight?'#e6ebf3':'#ffffff24');
   x.fillStyle=a;x.fillRect(pad,cardY,w*.012,cardH);
   const bodyFont='500 '+Math.round(w*.024)+'px Arial',lines=wrap(x,detail,w*.70,bodyFont).slice(0,6);
