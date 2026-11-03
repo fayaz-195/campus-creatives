@@ -440,6 +440,46 @@ td b{color:#1c2c47;font-weight:700}
  .side nav#mobileAdminNav .navbtn.active{background:#ffffff1c;box-shadow:inset 3px 0 0 var(--yellow)}
 }
 
+
+/* Unified grouped navigation for desktop and mobile */
+@media(min-width:901px){
+ .shell{display:flex!important;flex-direction:column!important;min-height:100vh}
+ .side{position:sticky!important;top:0!important;width:100%!important;height:auto!important;min-height:0!important;padding:13px 28px!important;gap:0!important;z-index:40}
+ .side:after,.side-foot{display:none!important}
+ .side>.brand{width:100%;display:flex;align-items:center;gap:12px;margin:0!important;padding:0!important}
+ .side>.brand>div:nth-child(2){flex:1}
+ .mobile-menu-toggle{display:inline-flex!important;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:9px 16px;border:1px solid #ffffff28;border-radius:10px;background:#ffffff12;color:#fff;font-weight:700}
+ .side nav#mobileAdminNav{position:absolute!important;top:calc(100% + 8px);right:24px;left:auto;width:min(760px,calc(100vw - 48px));max-height:75vh;overflow:auto!important;display:none!important;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:9px;padding:13px!important;background:#0b1d3a;border:1px solid #ffffff20;border-radius:16px;box-shadow:0 22px 55px #02081766}
+ .side.menu-open nav#mobileAdminNav{display:grid!important}
+ .side nav#mobileAdminNav>.navbtn{grid-column:1/-1;width:100%;min-height:42px;padding:10px 13px!important}
+ .nav-group{min-width:0;border:1px solid #ffffff18;border-radius:11px;background:#ffffff08;overflow:hidden}
+ .nav-group-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px 13px;border:0;background:transparent;color:#fff;font-weight:700;text-align:left;cursor:pointer}
+ .nav-chevron{color:#f5c400;transition:transform .2s}
+ .nav-group.expanded .nav-chevron{transform:rotate(180deg)}
+ .nav-submenu{display:grid;gap:3px;padding:0 6px 7px}
+ .nav-submenu[hidden]{display:none!important}
+ .nav-submenu .navbtn{width:100%;min-height:38px;padding:8px 10px!important;font-size:12px}
+ .main{width:100%;min-width:0}
+ .top{position:sticky;top:68px}
+}
+@media(max-width:900px){
+ .side{position:sticky!important;top:0!important;z-index:40;padding:10px 13px!important;gap:0!important}
+ .side:after,.side-foot{display:none!important}
+ .side>.brand{width:100%;display:flex;align-items:center;justify-content:space-between;gap:9px}
+ .side>.brand>div:nth-child(2){flex:1;min-width:0}
+ .mobile-menu-toggle{display:inline-flex!important;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:8px 12px;border:1px solid #ffffff25;border-radius:9px;background:#ffffff12;color:#fff;font-size:12px;font-weight:700}
+ .side nav#mobileAdminNav{position:absolute!important;top:calc(100% + 7px);right:10px;left:auto;width:min(390px,calc(100vw - 20px));max-height:76vh;overflow-y:auto!important;display:none!important;grid-template-columns:1fr!important;gap:7px!important;padding:10px!important;margin:0!important;background:#0b1d3a;border:1px solid #ffffff20;border-radius:14px;box-shadow:0 18px 45px #02081766}
+ .side.menu-open nav#mobileAdminNav{display:grid!important}
+ .side nav#mobileAdminNav>.navbtn{width:100%;min-height:40px;padding:9px 11px!important}
+ .nav-group{border:1px solid #ffffff18;border-radius:10px;background:#ffffff08;overflow:hidden}
+ .nav-group-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:11px 12px;border:0;background:transparent;color:#fff;font-weight:700;text-align:left}
+ .nav-chevron{color:#f5c400;transition:transform .2s}
+ .nav-group.expanded .nav-chevron{transform:rotate(180deg)}
+ .nav-submenu{display:grid;gap:3px;padding:0 6px 6px}
+ .nav-submenu[hidden]{display:none!important}
+ .nav-submenu .navbtn{width:100%;min-height:38px;padding:8px 10px!important;font-size:11px}
+}
+
 </style>
 </head>
 <body>
@@ -451,7 +491,29 @@ td b{color:#1c2c47;font-weight:700}
 </div></div>
 <div id="appView" class="shell hidden">
  <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div><button id="menuToggle" class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobileAdminNav"><span class="menu-icon">☰</span><span>Menu</span></button></div>
- <nav id="mobileAdminNav"><button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button><button class="navbtn" data-page="enquiries">✉ &nbsp; Enquiries</button><button class="navbtn" data-page="portfolio">▧ &nbsp; Portfolio</button><button class="navbtn" data-page="projects">◷ &nbsp; Client Projects</button><button class="navbtn" data-page="uploads">↑ &nbsp; Upload Assets</button><button class="navbtn" data-page="clients">♙ &nbsp; Clients</button><button class="navbtn" data-page="tasks">☑ &nbsp; Tasks</button><button class="navbtn" data-page="invoices">₹ &nbsp; Invoices</button><button class="navbtn" data-page="approvals">✓ &nbsp; Approvals</button><button class="navbtn" data-page="crm">◉ &nbsp; CRM Pipeline</button><button class="navbtn" data-page="finance">₹ &nbsp; Finance</button><button class="navbtn" data-page="calendar">▦ &nbsp; Calendar</button><button class="navbtn" data-page="reports">▥ &nbsp; Reports</button><button class="navbtn" data-page="team">♙ &nbsp; Team</button><button class="navbtn" data-page="notifications">♢ &nbsp; Notifications</button><button class="navbtn" data-page="designer">✦ &nbsp; AI Designer</button></nav>
+ <nav id="mobileAdminNav">
+<button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button>
+<div class="nav-group" data-nav-group="sales">
+<button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="submenu-sales"><span>Sales & Clients</span><span class="nav-chevron">⌄</span></button>
+<div class="nav-submenu" id="submenu-sales" hidden><button class="navbtn" data-page="enquiries">✉ &nbsp; Enquiries</button><button class="navbtn" data-page="crm">◉ &nbsp; CRM Pipeline</button><button class="navbtn" data-page="clients">♙ &nbsp; Clients</button></div>
+</div>
+<div class="nav-group" data-nav-group="creative">
+<button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="submenu-creative"><span>Projects & Creative</span><span class="nav-chevron">⌄</span></button>
+<div class="nav-submenu" id="submenu-creative" hidden><button class="navbtn" data-page="projects">◷ &nbsp; Client Projects</button><button class="navbtn" data-page="portfolio">▧ &nbsp; Portfolio</button><button class="navbtn" data-page="uploads">↑ &nbsp; Upload Assets</button><button class="navbtn" data-page="designer">✦ &nbsp; AI Designer</button></div>
+</div>
+<div class="nav-group" data-nav-group="work">
+<button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="submenu-work"><span>Work Management</span><span class="nav-chevron">⌄</span></button>
+<div class="nav-submenu" id="submenu-work" hidden><button class="navbtn" data-page="tasks">☑ &nbsp; Tasks</button><button class="navbtn" data-page="calendar">▦ &nbsp; Calendar</button><button class="navbtn" data-page="approvals">✓ &nbsp; Approvals</button></div>
+</div>
+<div class="nav-group" data-nav-group="money">
+<button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="submenu-money"><span>Finance & Reports</span><span class="nav-chevron">⌄</span></button>
+<div class="nav-submenu" id="submenu-money" hidden><button class="navbtn" data-page="invoices">₹ &nbsp; Invoices</button><button class="navbtn" data-page="finance">₹ &nbsp; Finance</button><button class="navbtn" data-page="reports">▥ &nbsp; Reports</button></div>
+</div>
+<div class="nav-group" data-nav-group="team">
+<button class="nav-group-toggle" type="button" aria-expanded="false" aria-controls="submenu-team"><span>Team & Alerts</span><span class="nav-chevron">⌄</span></button>
+<div class="nav-submenu" id="submenu-team" hidden><button class="navbtn" data-page="team">♙ &nbsp; Team</button><button class="navbtn" data-page="notifications">♢ &nbsp; Notifications</button></div>
+</div>
+</nav>
  <div class="side-foot">We Create. Colleges Connect.<br>© Campus Creatives</div></aside>
  <main class="main"><header class="top"><h2 id="pageTitle">Overview</h2><div class="topright"><span id="userEmail"></span><div class="avatar">CC</div><button class="btn light small" id="changePasswordBtn">Change Password</button><button class="btn light small" id="logoutBtn">Logout</button></div></header>
  <div class="content">
@@ -546,7 +608,8 @@ document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>s
 
 const menuToggle=$('menuToggle');
 if(menuToggle){menuToggle.addEventListener('click',()=>{const opened=document.querySelector('.side').classList.toggle('menu-open');menuToggle.setAttribute('aria-expanded',String(opened));menuToggle.querySelector('.menu-icon').textContent=opened?'✕':'☰';menuToggle.lastElementChild.textContent=opened?'Close':'Menu';});}
-document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(window.matchMedia('(max-width: 900px)').matches){document.querySelector('.side').classList.remove('menu-open');if(menuToggle){menuToggle.setAttribute('aria-expanded','false');menuToggle.querySelector('.menu-icon').textContent='☰';menuToggle.lastElementChild.textContent='Menu';}}}));
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{document.querySelector('.side').classList.remove('menu-open');if(menuToggle){menuToggle.setAttribute('aria-expanded','false');menuToggle.querySelector('.menu-icon').textContent='☰';menuToggle.lastElementChild.textContent='Menu';}document.querySelectorAll('.nav-group').forEach(g=>{g.classList.remove('expanded');const t=g.querySelector('.nav-group-toggle'),p=g.querySelector('.nav-submenu');t.setAttribute('aria-expanded','false');p.hidden=true;});}));
+document.querySelectorAll('.nav-group-toggle').forEach(t=>t.addEventListener('click',()=>{const group=t.closest('.nav-group'),panel=group.querySelector('.nav-submenu'),open=!group.classList.contains('expanded');group.classList.toggle('expanded',open);t.setAttribute('aria-expanded',String(open));panel.hidden=!open;}));
 
 async function checkAdmin(user){const {data,error}=await sb.from('admin_users').select('user_id,email,phone').eq('user_id',user.id).maybeSingle();if(error)throw error;if(!data)throw new Error('Your account is signed in, but it has not been approved as an administrator yet. Ask the project owner to approve this email: '+user.email);return data}
 async function enter(user){if(enteringAdmin)return;enteringAdmin=true;currentUser=user;try{await checkAdmin(user);$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userEmail').textContent='Admin';await refreshAll()}catch(e){await sb.auth.signOut();msg('loginMsg',e.message)}finally{enteringAdmin=false}}
