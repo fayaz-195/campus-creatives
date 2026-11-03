@@ -448,7 +448,7 @@ td b{color:#1c2c47;font-weight:700}
  <section id="approvals" class="section"><div class="welcome"><div><h1>Client Approvals</h1><p>Prepare design previews and record approval decisions.</p></div><button class="btn" onclick="openModal('approvalModal')">+ Request approval</button></div><div class="panel"><div id="approvalsTable" class="table-wrap"><div class="empty">Loading approvals…</div></div></div></section>
  <section id="crm" class="section">
   <div class="welcome"><div><h1>CRM Pipeline</h1><p>Track leads, next follow-ups, estimated deal value and ownership.</p></div><button class="btn light" onclick="loadCRM()">↻ Refresh leads</button></div>
-  <div class="stats"><div class="stat"><span>Open leads</span><strong id="crmOpen">0</strong></div><div class="stat"><span>Follow-ups due</span><strong id="crmDue">0</strong></div><div class="stat"><span>Pipeline value</span><strong id="crmValue">₹0</strong></div><div class="stat"><span>Won / closed</span><strong id="crmClosed">0</strong></div></div>
+  <div class="stats"><div class="stat"><span>Open leads</span><strong id="crmOpen">0</strong></div><div class="stat"><span>Follow-ups due</span><strong id="crmDue">0</strong></div><div class="stat"><span>Pipeline value</span><strong id="crmValue">₹0</strong></div><div class="stat"><span>Closed leads</span><strong id="crmClosed">0</strong></div></div>
   <div class="panel"><div class="panel-head"><h3>Lead follow-up board</h3><span class="muted">Update follow-up date, source, owner and deal value inline.</span></div><div id="crmTable" class="table-wrap">Loading CRM…</div></div>
  </section>
  <section id="finance" class="section">
@@ -619,11 +619,12 @@ async function loadReports(){
  $('ccReportDetails').innerHTML='<div class="report-summary"><div><b>'+leads.length+'</b><span>Total leads</span></div><div><b>'+projects.length+'</b><span>Total projects</span></div><div><b>'+inr(amount)+'</b><span>Invoiced</span></div><div><b>'+inr(cost)+'</b><span>Recorded expenses</span></div></div><h4 style="margin:18px 0 8px">Enquiries by service</h4>'+table(['Service','Enquiries'],Object.entries(byService).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<tr><td>'+esc(k)+'</td><td>'+v+'</td></tr>'));
 }
 async function loadNotifications(){
- const [tr,ir,lr]=await Promise.all([sb.from('admin_tasks').select('*').not('due_date','is',null).neq('status','Done'),sb.from('invoices').select('*').not('due_date','is',null).neq('status','Paid'),sb.from('enquiries').select('*').not('follow_up_date','is',null).neq('status','Closed')]);
- const err=[tr,ir,lr].find(x=>x.error);if(err){$('ccNotificationsList').textContent=err.error.message;return}
+ const [tr,ir,lr,pr]=await Promise.all([sb.from('admin_tasks').select('*').not('due_date','is',null).neq('status','Done'),sb.from('invoices').select('*').not('due_date','is',null).neq('status','Paid'),sb.from('enquiries').select('*').not('follow_up_date','is',null).neq('status','Closed'),sb.from('client_projects').select('*').not('due_date','is',null).not('status','in','(Completed,On Hold)')]);
+ const err=[tr,ir,lr,pr].find(x=>x.error);if(err){$('ccNotificationsList').textContent=err.error.message;return}
  const rows=[],today=todayISO();
  (lr.data||[]).filter(x=>x.status==='New').forEach(x=>rows.push({title:'New enquiry received',body:x.name+' · '+(x.service||'Service not specified'),kind:'lead',link_page:'crm',dedupe_key:'new-lead-'+x.id}));
  (tr.data||[]).filter(x=>x.due_date<=today).forEach(x=>rows.push({title:x.due_date<today?'Overdue task':'Task due today',body:x.title+' · '+x.status,kind:'task',link_page:'tasks',dedupe_key:'task-'+x.id+'-'+x.due_date}));
+ (pr.data||[]).filter(x=>x.due_date<=today).forEach(x=>rows.push({title:x.due_date<today?'Project delivery overdue':'Project delivery due today',body:x.project_name+' · '+x.client,kind:'system',link_page:'projects',dedupe_key:'project-'+x.id+'-'+x.due_date}));
  (ir.data||[]).filter(x=>x.due_date<=today).forEach(x=>rows.push({title:x.due_date<today?'Invoice overdue':'Invoice due today',body:x.invoice_number+' · '+x.client_name+' · '+inr(Number(x.amount)-Number(x.amount_paid||0)),kind:'payment',link_page:'finance',dedupe_key:'invoice-'+x.id+'-'+x.due_date}));
  (lr.data||[]).filter(x=>x.follow_up_date<=today).forEach(x=>rows.push({title:x.follow_up_date<today?'Lead follow-up overdue':'Lead follow-up today',body:x.name+' · '+(x.phone||x.email||''),kind:'lead',link_page:'crm',dedupe_key:'lead-'+x.id+'-'+x.follow_up_date}));
  if(rows.length){const {error}=await sb.from('admin_notifications').upsert(rows,{onConflict:'dedupe_key',ignoreDuplicates:true});if(error){$('ccNotificationsList').textContent=error.message;return}}
