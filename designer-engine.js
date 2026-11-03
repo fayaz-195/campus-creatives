@@ -20,14 +20,15 @@
   if(/story/i.test(type)){h=1920}else if(/portrait|whatsapp/i.test(type)){h=1350}else if(/A4|calendar/i.test(type)){w=1240;h=1754}else if(/Facebook/i.test(type)){w=1640;h=624}
   const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d'),p=hex(v('primary_color')),a=hex(v('secondary_color')||'#f5c400'),pad=w*.075;
   const isLight=/minimal|clean|corporate|elegant|premium/i.test(style),isBold=/bold|energetic|modern|vibrant|creative/i.test(style);
-  const bg=isLight?'#f7f8fb':p,fg=isLight?'#10213d':'#ffffff',muted=isLight?'#59677d':'#dce6f7';
+  // Keep the canvas clean and light: client colours are typography/accent colours, not a full-bleed background.
+  const bg='#ffffff',fg=p,muted='#526176';
   x.fillStyle=bg;x.fillRect(0,0,w,h);
-  // Layered editorial geometry
-  if(!isLight){const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,p);g.addColorStop(1,'#071326');x.fillStyle=g;x.fillRect(0,0,w,h)}
+  // Subtle neutral panel and restrained brand-colour accents.
+  x.fillStyle='#f5f7fb';x.fillRect(0,h*.19,w,h*.68);
   x.save();x.globalAlpha=isLight ? 0.08 : 0.22;x.fillStyle=a;x.beginPath();x.arc(w*.91,h*.16,Math.min(w,h)*.34,0,Math.PI*2);x.fill();x.restore();
   x.save();x.globalAlpha=isLight ? 0.06 : 0.13;x.strokeStyle=a;x.lineWidth=Math.max(2,w*.002);for(let i=0;i<8;i++){x.beginPath();x.arc(w*.88,h*.16,Math.min(w,h)*(.12+i*.035),0,Math.PI*2);x.stroke()}x.restore();
   // Header band / brand lockup
-  rr(x,pad*.72,h*.055,w*.86,h*.105,w*.018,isLight?'#ffffff':'#ffffff12',isLight?'#e4e9f1':'#ffffff22');
+  rr(x,pad*.72,h*.055,w*.86,h*.105,w*.018,'#ffffff','#e4e9f1');
   const logo=v('logo_url');
   x.fillStyle=a;rr(x,pad,h*.075,w*.012,h*.065,5,a);
   x.fillStyle=fg;x.font='800 '+Math.round(w*.027)+'px Arial';x.fillText(String(v('brand_name')).toUpperCase().slice(0,36),pad+w*.035,h*.112);
@@ -35,7 +36,7 @@
   // Decorative side label
   x.save();x.translate(w*.94,h*.54);x.rotate(Math.PI/2);x.fillStyle=a;x.font='700 '+Math.round(w*.013)+'px Arial';x.fillText('CAMPUS CREATIVES  •  DESIGN STUDIO',0,0);x.restore();
   const title=prompt.split(/[.!?\n]/)[0].trim().toUpperCase();
-  const titleSize=Math.round(w*(isBold ? 0.092 : 0.078)),titleFont='900 '+titleSize+'px Arial';
+  const titleSize=Math.round(w*(isBold ? 0.082 : 0.070)),titleFont='900 '+titleSize+'px Arial';
   const titleLines=wrap(x,title,w*.79,titleFont).slice(0,4);
   let y=h*(/calendar/i.test(type)?.235:.34);
   x.fillStyle=a;x.font='800 '+Math.round(w*.017)+'px Arial';x.fillText(($('designStyle').value||'SIGNATURE SERIES').toUpperCase().slice(0,32),pad,y-w*.055);
@@ -68,8 +69,8 @@
    $('designerMsg').textContent='Poster composition ready. Download the PNG to use it.';
   };
   const finishWithLogo=()=>{
-   if(logo){const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{x.drawImage(im,w-pad-w*.115,h*.072,w*.105,w*.075);finish(c.toDataURL('image/png'))};im.onerror=()=>finish(c.toDataURL('image/png'));im.src=logo}
-   else finish(c.toDataURL('image/png'));
+   if(logo){const im=new Image();im.onload=()=>{const maxW=w*.16,maxH=h*.12,scale=Math.min(maxW/im.naturalWidth,maxH/im.naturalHeight);const iw=im.naturalWidth*scale,ih=im.naturalHeight*scale;x.drawImage(im,w-pad-iw,h*.065,iw,ih);finish(c.toDataURL('image/png'))};im.onerror=()=>{ $('designerMsg').textContent='Logo could not load. Please re-upload the logo in the brand profile.';finish(c.toDataURL('image/png'))};im.src=logo}
+   else { $('designerMsg').textContent='No logo saved for this brand. Upload and save the client logo first.';finish(c.toDataURL('image/png'))}
   };
   finishWithLogo();
  }
