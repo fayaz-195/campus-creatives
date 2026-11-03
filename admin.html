@@ -480,6 +480,58 @@ td b{color:#1c2c47;font-weight:700}
  .nav-submenu .navbtn{width:100%;min-height:38px;padding:8px 10px!important;font-size:11px}
 }
 
+
+/* Reference-inspired left navigation layout */
+@media(min-width:901px){
+ #appView.shell{display:grid!important;grid-template-columns:258px minmax(0,1fr)!important;flex-direction:initial!important;min-height:100vh}
+ #appView .side{position:sticky!important;top:0!important;align-self:start;width:258px!important;height:100vh!important;min-height:100vh!important;overflow-y:auto!important;overflow-x:hidden!important;padding:22px 14px 18px!important;gap:22px!important;z-index:30}
+ #appView .side>.brand{display:flex!important;align-items:center!important;gap:10px!important;margin:0 5px!important}
+ #appView .side>.brand>div:nth-child(2){flex:1;min-width:0}
+ #appView .side nav#mobileAdminNav{position:static!important;display:grid!important;grid-template-columns:1fr!important;gap:7px!important;width:100%!important;max-height:none!important;overflow:visible!important;padding:0!important;margin:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+ #appView .side nav#mobileAdminNav>.navbtn{width:100%;min-height:42px;padding:11px 12px!important}
+ #appView .side .nav-group{width:100%;border:1px solid #ffffff16;border-radius:10px;background:#ffffff07;overflow:hidden}
+ #appView .side .nav-group-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:12px;border:0;background:transparent;color:#d3dced;font-weight:700;text-align:left;cursor:pointer}
+ #appView .side .nav-group-toggle:hover{background:#ffffff0d;color:#fff}
+ #appView .side .nav-submenu{display:grid;gap:4px;padding:0 6px 7px}
+ #appView .side .nav-submenu[hidden]{display:none!important}
+ #appView .side .nav-submenu .navbtn{width:100%;min-height:38px;padding:9px 11px!important;font-size:12px}
+ #appView .side .side-foot{display:block!important;margin-top:auto}
+ #appView .main{width:100%;min-width:0}
+ #appView .top{position:sticky!important;top:0!important;z-index:20;height:76px;padding:0 30px!important}
+ #appView.shell.sidebar-hidden{grid-template-columns:0 minmax(0,1fr)!important}
+ #appView.shell.sidebar-hidden .side{width:0!important;min-width:0!important;padding:0!important;overflow:hidden!important;border:0!important}
+}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.top-left{display:flex;align-items:center;gap:14px;min-width:0}
+.sidebar-toggle{flex:0 0 auto;width:40px;height:40px;border:1px solid #e3e8f1;border-radius:10px;background:#fff;color:#10264b;font-size:20px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 3px 10px #10264b0b}
+.sidebar-toggle:hover{background:#f3f6fc}
+@media(max-width:900px){
+ #appView.shell{display:block!important;min-height:100svh}
+ #appView .side{position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:min(290px,86vw)!important;height:100dvh!important;min-height:100dvh!important;padding:18px 14px!important;gap:20px!important;overflow-y:auto!important;transform:translateX(-105%);transition:transform .24s ease;z-index:70;box-shadow:12px 0 35px #02081730}
+ #appView.shell.mobile-nav-open .side{transform:translateX(0)}
+ #appView .side>.brand{display:flex!important;align-items:center!important;gap:10px!important;margin:0 5px!important}
+ #appView .side>.brand>div:nth-child(2){flex:1;min-width:0}
+ #appView .side nav#mobileAdminNav{position:static!important;display:grid!important;grid-template-columns:1fr!important;gap:7px!important;width:100%!important;max-height:none!important;overflow:visible!important;padding:0!important;margin:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+ #appView .side nav#mobileAdminNav>.navbtn{width:100%;min-height:42px;padding:10px 12px!important}
+ #appView .side .nav-group{border:1px solid #ffffff18;border-radius:10px;background:#ffffff08;overflow:hidden}
+ #appView .side .nav-group-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;padding:11px 12px;border:0;background:transparent;color:#fff;font-weight:700;text-align:left}
+ #appView .side .nav-submenu{display:grid;gap:3px;padding:0 6px 6px}
+ #appView .side .nav-submenu[hidden]{display:none!important}
+ #appView .side .nav-submenu .navbtn{width:100%;min-height:38px;padding:8px 10px!important;font-size:12px}
+ #appView .side .side-foot{display:block!important;margin-top:auto}
+ #appView .main{width:100%;min-width:0}
+ #appView .top{position:sticky!important;top:0!important;min-height:66px;height:auto;padding:10px 13px!important;flex-wrap:wrap}
+ #appView .top-left h2{font-size:15px}
+ #appView .topright{gap:7px}
+ #appView.shell.mobile-nav-open:before{content:"";position:fixed;inset:0;background:#06122999;z-index:65}
+}
+@media(max-width:560px){
+ #appView .top{align-items:center}
+ #appView .topright{display:flex;flex-wrap:wrap;justify-content:flex-end}
+ #appView #userEmail{display:none}
+ #appView .topright .btn{font-size:10px;padding:8px}
+}
+
 </style>
 </head>
 <body>
@@ -490,7 +542,7 @@ td b{color:#1c2c47;font-weight:700}
  <div id="loginMsg" class="msg"></div><div class="notice">Private administrator access. Your PIN is verified securely by Supabase Authentication and is never stored in this page.</div>
 </div></div>
 <div id="appView" class="shell hidden">
- <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div><button id="menuToggle" class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobileAdminNav"><span class="menu-icon">☰</span><span>Menu</span></button></div>
+ <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div></div>
  <nav id="mobileAdminNav">
 <button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button>
 <div class="nav-group" data-nav-group="sales">
@@ -515,7 +567,7 @@ td b{color:#1c2c47;font-weight:700}
 </div>
 </nav>
  <div class="side-foot">We Create. Colleges Connect.<br>© Campus Creatives</div></aside>
- <main class="main"><header class="top"><h2 id="pageTitle">Overview</h2><div class="topright"><span id="userEmail"></span><div class="avatar">CC</div><button class="btn light small" id="changePasswordBtn">Change Password</button><button class="btn light small" id="logoutBtn">Logout</button></div></header>
+ <main class="main"><header class="top"><div class="top-left"><button id="menuToggle" class="sidebar-toggle" type="button" aria-label="Toggle navigation" aria-expanded="true">☰</button><h2 id="pageTitle">Overview</h2></div><div class="topright"><span id="userEmail"></span><div class="avatar">CC</div><button class="btn light small" id="changePasswordBtn">Change Password</button><button class="btn light small" id="logoutBtn">Logout</button></div></header>
  <div class="content">
  <section id="overview" class="section active"><div class="welcome"><div><h1>Good to see you.</h1><p>Here’s what’s happening across Campus Creatives.</p></div><button class="btn" onclick="showPage('enquiries')">View enquiries →</button></div>
  <div class="stats"><div class="stat"><span>Total enquiries</span><strong id="statEnquiries">—</strong></div><div class="stat"><span>New enquiries</span><strong id="statNew">—</strong></div><div class="stat"><span>Portfolio items</span><strong id="statPortfolio">—</strong></div><div class="stat"><span>Active projects</span><strong id="statProjects">—</strong></div></div>
@@ -607,8 +659,8 @@ function showPage(page){document.querySelectorAll('.section').forEach(s=>s.class
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 
 const menuToggle=$('menuToggle');
-if(menuToggle){menuToggle.addEventListener('click',()=>{const opened=document.querySelector('.side').classList.toggle('menu-open');menuToggle.setAttribute('aria-expanded',String(opened));menuToggle.querySelector('.menu-icon').textContent=opened?'✕':'☰';menuToggle.lastElementChild.textContent=opened?'Close':'Menu';});}
-document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{document.querySelector('.side').classList.remove('menu-open');if(menuToggle){menuToggle.setAttribute('aria-expanded','false');menuToggle.querySelector('.menu-icon').textContent='☰';menuToggle.lastElementChild.textContent='Menu';}document.querySelectorAll('.nav-group').forEach(g=>{g.classList.remove('expanded');const t=g.querySelector('.nav-group-toggle'),p=g.querySelector('.nav-submenu');t.setAttribute('aria-expanded','false');p.hidden=true;});}));
+if(menuToggle){menuToggle.addEventListener('click',()=>{const shell=$('appView');const mobile=window.matchMedia('(max-width: 900px)').matches;const cls=mobile?'mobile-nav-open':'sidebar-hidden';const opened=shell.classList.toggle(cls);menuToggle.setAttribute('aria-expanded',String(mobile?opened:!opened));});}
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{const shell=$('appView');shell.classList.remove('mobile-nav-open');if(menuToggle)menuToggle.setAttribute('aria-expanded',String(!shell.classList.contains('sidebar-hidden')));document.querySelectorAll('.nav-group').forEach(g=>{g.classList.remove('expanded');const t=g.querySelector('.nav-group-toggle'),p=g.querySelector('.nav-submenu');t.setAttribute('aria-expanded','false');p.hidden=true;});}));
 document.querySelectorAll('.nav-group-toggle').forEach(t=>t.addEventListener('click',()=>{const group=t.closest('.nav-group'),panel=group.querySelector('.nav-submenu'),open=!group.classList.contains('expanded');group.classList.toggle('expanded',open);t.setAttribute('aria-expanded',String(open));panel.hidden=!open;}));
 
 async function checkAdmin(user){const {data,error}=await sb.from('admin_users').select('user_id,email,phone').eq('user_id',user.id).maybeSingle();if(error)throw error;if(!data)throw new Error('Your account is signed in, but it has not been approved as an administrator yet. Ask the project owner to approve this email: '+user.email);return data}
