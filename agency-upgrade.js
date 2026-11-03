@@ -8,7 +8,7 @@
  async function fillClientSelects(){
   const {data,error}=await sb.from('clients').select('id,name,institution').order('name');
   if(error){note('ccClientLinkMsg',error.message);return}
-  ['ccPortalClient','ccSocialClient','ccCampaignClient'].forEach(id=>{const el=$(id);if(!el)return;const empty=el.options[0]?.outerHTML||'<option value="">Select client</option>';el.innerHTML=empty+(data||[]).map(c=>'<option value="'+c.id+'">'+esc(c.name)+(c.institution?' · '+esc(c.institution):'')+'</option>').join('')});
+  ['ccPortalClient','ccSocialClient','ccCampaignClient','ccProjectClient','ccInvoiceClient','ccApprovalClient'].forEach(id=>{const el=$(id);if(!el)return;const empty=el.options[0]?.outerHTML||'<option value="">Select client</option>';el.innerHTML=empty+(data||[]).map(c=>'<option value="'+c.id+'">'+esc(c.name)+(c.institution?' · '+esc(c.institution):'')+'</option>').join('')});
  }
  async function loadLinks(){
   await fillClientSelects();
