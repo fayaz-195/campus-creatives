@@ -22,28 +22,30 @@
  function copyFromBrief(brief,brand){
   const text=brief.replace(/https?:\/\/\S+/g,' ').replace(/\s+/g,' ').trim();
   const year=(text.match(/20\d{2}\s*[-–]\s*\d{2,4}/)||[])[0]||'2026–27';
-  let title='MAKE YOUR FUTURE HAPPEN',kicker='A NEW ACADEMIC JOURNEY';
-  if(/sri\\s*ram|rama\\s*navami/i.test(text)){title='SRI RAMA NAVAMI';kicker='MAY DHARMA AND PEACE GUIDE EVERY STEP';}
+  const festival=/sri\s*ram|rama\s*navami|ugadi|diwali|deepavali|dussehra|vijayadashami|ganesh|vinayaka|independence\s*day|teachers?\s*day|christmas|sankranti|holi|eid|bakrid|ramzan|ramadan|remedan/i.test(text);
+  let title='YOUR POTENTIAL HAS NO LIMITS',kicker='DREAM. PREPARE. ACHIEVE.',subtitle='';
+  if(/sri\s*ram|rama\s*navami/i.test(text)){title='SRI RAMA NAVAMI';kicker='MAY DHARMA AND PEACE GUIDE EVERY STEP';}
   else if(/ugadi/i.test(text)){title='HAPPY UGADI';kicker='WISHING YOU A YEAR OF NEW BEGINNINGS';}
   else if(/diwali|deepavali/i.test(text)){title='HAPPY DIWALI';kicker='MAY YOUR LIFE SHINE WITH JOY AND LIGHT';}
   else if(/dussehra|vijayadashami/i.test(text)){title='HAPPY DUSSEHRA';kicker='CELEBRATING THE VICTORY OF GOOD';}
   else if(/ganesh|vinayaka/i.test(text)){title='HAPPY GANESH CHATURTHI';kicker='MAY LORD GANESHA BLESS YOU';}
   else if(/ramadan|ramadhan|ramzan|ramazan|remedan|eid|bakrid|bakra eid/i.test(text)){title=/eid|bakrid|bakra eid/i.test(text)?'EID MUBARAK':'RAMADAN MUBARAK';kicker='WISHING YOU PEACE, BLESSINGS AND JOY';}
-  else if(/independence\\s*day/i.test(text)){title='HAPPY INDEPENDENCE DAY';kicker='CELEBRATING THE SPIRIT OF FREEDOM';}
-  else if(/teachers?\\s*day/i.test(text)){title='HAPPY TEACHERS’ DAY';kicker='HONOURING THOSE WHO INSPIRE';}
-  if(/admission|admissions|enrol|enroll|join/i.test(text)){title='ADMISSIONS OPEN';kicker='ADMISSIONS '+year;}
+  else if(/independence\s*day/i.test(text)){title='HAPPY INDEPENDENCE DAY';kicker='CELEBRATING THE SPIRIT OF FREEDOM';}
+  else if(/teachers?\s*day/i.test(text)){title='HAPPY TEACHERS’ DAY';kicker='HONOURING THOSE WHO INSPIRE';}
+  else if(/admission|admissions|enrol|enroll|join/i.test(text)){title='ADMISSIONS OPEN';kicker='ADMISSIONS '+year;subtitle='IIT-JEE  •  NEET  •  EAPCET';}
   else if(/scholarship|talent test/i.test(text)){title='SCHOLARSHIP TEST';kicker='EXCEL WITH AGASTYA';}
   else if(/result|results/i.test(text)){title='CELEBRATING SUCCESS';kicker='STUDENT ACHIEVEMENTS';}
-  else if(/event|fest|celebration|cultural/i.test(text)){title='LET’S CELEBRATE';kicker='CAMPUS EVENT';}
   else if(/neet/i.test(text)){title='DREAM BIG. AIM NEET.';kicker='YOUR MEDICAL JOURNEY STARTS HERE';}
   else if(/iit|jee/i.test(text)){title='AIM HIGHER. GO IIT.';kicker='YOUR IIT-JEE JOURNEY STARTS HERE';}
+  else if(/event|fest|celebration|cultural/i.test(text)&&!festival){title='LET’S CELEBRATE';kicker='CAMPUS EVENT';}
   const explicit=text.match(/(?:headline|title)\s*[:\-]\s*([^.;]{3,65})/i);
   if(explicit)title=explicit[1].trim().toUpperCase();
-  const isFestival=/sri\s*ram|rama\s*navami|ugadi|diwali|deepavali|dussehra|vijayadashami|ganesh|vinayaka|independence\s*day|teachers?\s*day|christmas|sankranti|holi|eid|bakrid|ramzan/i.test(text);
-  const groups=!isFestival&&( /\bMPC\b/i.test(text)||/\bBiPC\b/i.test(text)||/\bMEC\b/i.test(text)||/\bCEC\b/i.test(text))
-   ? 'MPC  •  BiPC  •  MEC  •  CEC'
-   : (!isFestival&&/admission|admissions|junior college/i.test(text)?'IIT-JEE  •  NEET  •  EAPCET':'');
-  return {title,kicker,subtitle:groups,year};
+  const quoted=text.match(/[“"]([^”"]{5,65})[”"]/);
+  if(quoted&&!festival&&!/admission|scholarship|result/i.test(text))title=quoted[1].trim().toUpperCase();
+  const isMotivational=/motivat|mindset|inspir|success|dream|achiev|potential|limits|discipline/i.test(text);
+  if(isMotivational&&!festival&&!/admission|scholarship|result/i.test(text)&&!explicit&&!quoted){title='YOUR MINDSET DEFINES YOUR LIMITS';kicker='DREAM. PREPARE. ACHIEVE.';}
+  if(!subtitle&&!festival&&/\bMPC\b|\bBiPC\b|\bMEC\b|\bCEC\b/i.test(text))subtitle='MPC  •  BiPC  •  MEC  •  CEC';
+  return {title,kicker,subtitle,year,festival,isMotivational};
  }
  async function loadImage(url){
   const res=await fetch(url,{mode:'cors'});if(!res.ok)throw new Error('Could not load saved client logo.');const blob=await res.blob(),u=URL.createObjectURL(blob);
@@ -51,32 +53,55 @@
  }
  async function composite(artBlob,brand,brief){
   const [w,h]=$('ccAiSize').value.split('x').map(Number),canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-  const ctx=canvas.getContext('2d'),artUrl=URL.createObjectURL(artBlob);
-  try{const art=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=artUrl;});const scale=Math.max(w/art.width,h/art.height),dw=art.width*scale,dh=art.height*scale;ctx.drawImage(art,(w-dw)/2,(h-dh)/2,dw,dh);}finally{URL.revokeObjectURL(artUrl)}
-  const primary=/^#[0-9a-f]{6}$/i.test(brand.primary_color||'')?brand.primary_color:'#087f8c';
-  const accent=/^#[0-9a-f]{6}$/i.test(brand.secondary_color||'')?brand.secondary_color:'#e38b22';
-  const margin=Math.round(w*.055),topH=Math.round(h*.17),footerY=Math.round(h*.68);
-  // Quiet logo header with enough space to keep the original logo readable.
-  const header=ctx.createLinearGradient(0,0,0,topH);header.addColorStop(0,'rgba(5,18,35,.72)');header.addColorStop(1,'rgba(5,18,35,0)');
-  ctx.fillStyle=header;ctx.fillRect(0,0,w,topH);
-  if(brand.logo_url){
-   try{const logo=await loadImage(brand.logo_url);if(logo.width/logo.height<1.15)throw new Error('The saved logo file looks like a portrait/mockup image, not a horizontal logo. Upload the original logo file.');const maxW=w*.42,maxH=h*.105,scale=Math.min(maxW/logo.width,maxH/logo.height),lw=logo.width*scale,lh=logo.height*scale,x=margin,y=Math.round(h*.035);
-    ctx.save();ctx.shadowColor='rgba(0,0,0,.18)';ctx.shadowBlur=18;ctx.fillStyle='rgba(255,255,255,.97)';ctx.beginPath();ctx.roundRect(x-14,y-12,lw+28,lh+24,16);ctx.fill();ctx.restore();ctx.drawImage(logo,x,y,lw,lh);
-   }catch(e){console.warn('Saved logo could not be composited:',e);}
-  }
-  // Full-width cinematic footer; image remains visible above it.
-  const shade=ctx.createLinearGradient(0,footerY-h*.12,0,h);shade.addColorStop(0,'rgba(4,15,32,0)');shade.addColorStop(.25,'rgba(4,15,32,.88)');shade.addColorStop(1,'rgba(4,15,32,.97)');ctx.fillStyle=shade;ctx.fillRect(0,footerY-h*.12,w,h-(footerY-h*.12));
-  ctx.fillStyle=accent;ctx.fillRect(margin,footerY+Math.round(h*.035),Math.round(w*.085),Math.max(8,Math.round(h*.009)));
-  const copy=copyFromBrief(brief,brand),kickerY=footerY+Math.round(h*.075);
-  ctx.textBaseline='top';ctx.fillStyle='#ffffff';ctx.font='700 '+Math.round(w*.025)+'px Arial';ctx.fillText(copy.kicker.toUpperCase(),margin,kickerY,w-margin*2);
-  ctx.fillStyle='#ffffff';let fs=Math.round(w*.087);ctx.font='900 '+fs+'px Arial';
-  while(ctx.measureText(copy.title).width>w-margin*2&&fs>Math.round(w*.052)){fs-=2;ctx.font='900 '+fs+'px Arial'}
-  const titleY=kickerY+Math.round(h*.055);ctx.fillText(copy.title,margin,titleY,w-margin*2);
-  let detailY=titleY+Math.round(fs*1.18);
-  if(copy.subtitle){ctx.fillStyle='#f6d36a';ctx.font='700 '+Math.round(w*.027)+'px Arial';ctx.fillText(copy.subtitle,margin,detailY,w-margin*2);detailY+=Math.round(h*.052);}
-  const contact=[brand.phone,brand.website,brand.address].filter(Boolean).join('   •   ');
-  if(contact){ctx.fillStyle='rgba(255,255,255,.9)';ctx.font='500 '+Math.round(w*.019)+'px Arial';ctx.fillText(contact,margin,h-Math.round(h*.055),w-margin*2);}
-  return await new Promise(resolve=>canvas.toBlob(resolve,'image/png',.96));
+  const ctx=canvas.getContext('2d'),artUrl=URL.createObjectURL(artBlob),art=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=artUrl;});
+  const copy=copyFromBrief(brief,brand),primary=/^#[0-9a-f]{6}$/i.test(brand.primary_color||'')?brand.primary_color:'#164b7a',accent=/^#[0-9a-f]{6}$/i.test(brand.secondary_color||'')?brand.secondary_color:'#f36b21';
+  const margin=Math.round(w*.055),min=Math.min(w,h),isPortrait=h>=w;
+  function roundedImage(im,x,y,ww,hh,r){ctx.save();ctx.beginPath();ctx.roundRect(x,y,ww,hh,r);ctx.clip();const s=Math.max(ww/im.width,hh/im.height),dw=im.width*s,dh=im.height*s;ctx.drawImage(im,x+(ww-dw)/2,y+(hh-dh)/2,dw,dh);ctx.restore();}
+  function fitText(txt,maxWidth,start,minSize,weight='800'){let size=start;ctx.font=weight+' '+size+'px Arial';while(ctx.measureText(txt).width>maxWidth&&size>minSize){size-=2;ctx.font=weight+' '+size+'px Arial'}return size;}
+  try{
+   // Clean editorial poster system: bright white canvas, subtle geometry, generous spacing.
+   ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);
+   const glow=ctx.createRadialGradient(w*.92,h*.08,0,w*.92,h*.08,min*.42);glow.addColorStop(0,'rgba(31,112,174,.10)');glow.addColorStop(1,'rgba(31,112,174,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
+   ctx.strokeStyle='rgba(32,111,166,.13)';ctx.lineWidth=Math.max(2,min*.004);ctx.beginPath();ctx.arc(-w*.08,h*.16,min*.22,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(w*1.08,h*.83,min*.18,0,Math.PI*2);ctx.stroke();
+   // Original client logo only; portrait mockups are deliberately rejected.
+   if(brand.logo_url){try{const logo=await loadImage(brand.logo_url);if(logo.width/logo.height<1.15)throw new Error('portrait/mockup');const maxW=w*.76,maxH=h*.105,s=Math.min(maxW/logo.width,maxH/logo.height),lw=logo.width*s,lh=logo.height*s;ctx.drawImage(logo,(w-lw)/2,margin*.55,lw,lh);}catch(e){console.warn('A clean horizontal client logo file is required; skipping logo.',e);}}
+   const headerBottom=Math.round(h*.16);
+   ctx.fillStyle=accent;ctx.fillRect(margin,headerBottom,w-margin*2,Math.max(2,min*.002));
+   if(copy.festival){
+    // Festival greeting layout: image-led, no college/campus content or dark corporate footer.
+    const imageY=Math.round(h*.19),imageH=Math.round(h*.49);
+    roundedImage(art,margin,imageY,w-margin*2,imageH,Math.round(min*.025));
+    const titleY=imageY+imageH+Math.round(h*.045);
+    ctx.fillStyle=primary;let fs=fitText(copy.title,w-margin*2,Math.round(min*.09),Math.round(min*.045),'900');ctx.font='900 '+fs+'px Arial';ctx.textAlign='center';ctx.fillText(copy.title,w/2,titleY);
+    ctx.fillStyle=accent;ctx.fillRect(w*.38,titleY+fs*1.18,w*.24,Math.max(5,min*.008));
+    ctx.fillStyle=primary;ctx.font='600 '+Math.round(min*.027)+'px Arial';ctx.fillText(copy.kicker,w/2,titleY+fs*1.5,w-margin*2);ctx.textAlign='left';
+   }else{
+    // Strong editorial hierarchy: oversized message first, meaningful visual concept second.
+    const titleY=Math.round(h*.22),maxW=w-margin*2;
+    ctx.textAlign='center';ctx.fillStyle=primary;
+    let fs=fitText(copy.title,maxW,Math.round(min*.095),Math.round(min*.052),'900');ctx.font='900 '+fs+'px Arial';
+    const words=copy.title.split(/\s+/);let lines=[],line='';
+    for(const word of words){const next=line?line+' '+word:word;if(ctx.measureText(next).width>maxW&&line){lines.push(line);line=word}else line=next;}if(line)lines.push(line);
+    let ty=titleY;for(const ln of lines.slice(0,3)){ctx.fillText(ln,w/2,ty);ty+=Math.round(fs*1.08);}
+    ctx.fillStyle=accent;ctx.fillRect(w*.22,ty+Math.round(h*.012),w*.56,Math.max(5,min*.008));
+    ctx.fillStyle=primary;ctx.font='700 '+Math.round(min*.033)+'px Arial';ctx.fillText(copy.kicker,w/2,ty+Math.round(h*.055),maxW);
+    if(copy.subtitle){ctx.fillStyle=accent;ctx.font='700 '+Math.round(min*.027)+'px Arial';ctx.fillText(copy.subtitle,w/2,ty+Math.round(h*.105),maxW);}
+    const artY=Math.round(h*.43),artH=Math.round(h*.39);
+    roundedImage(art,margin,artY,w-margin*2,artH,Math.round(min*.018));
+    if(copy.isMotivational){
+      const labels=['DISCIPLINE','CONCEPTS','PRACTICE','CONFIDENCE','SUCCESS'],baseY=artY+artH-Math.round(h*.035),stepW=(w-margin*2)/labels.length;
+      ctx.font='700 '+Math.round(min*.018)+'px Arial';ctx.textAlign='center';
+      labels.forEach((label,i)=>{const x=margin+i*stepW;ctx.fillStyle='rgba(255,255,255,.94)';ctx.fillRect(x,baseY,stepW-3,Math.round(h*.035));ctx.fillStyle=primary;ctx.fillText(label,x+stepW/2,baseY+Math.round(h*.024),stepW-6);});
+    }
+    ctx.textAlign='left';
+   }
+   // Thin footer rule and accurate saved contact details.
+   const ruleY=Math.round(h*.91);ctx.fillStyle=primary;ctx.fillRect(margin,ruleY,w-margin*2,Math.max(2,min*.002));
+   const contact=[brand.phone,brand.website,brand.address].filter(Boolean);
+   ctx.fillStyle=primary;ctx.font='600 '+Math.round(min*.022)+'px Arial';ctx.textAlign='center';
+   const footer=contact.join('   |   ');ctx.fillText(footer,w/2,Math.round(h*.945),w-margin*2);ctx.textAlign='left';
+   return await new Promise(resolve=>canvas.toBlob(resolve,'image/png',.96));
+  }finally{URL.revokeObjectURL(artUrl)}
  }
  async function run(){
   const brief=promptEl.value.trim();
