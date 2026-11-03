@@ -77,9 +77,35 @@
    $('designPreview').innerHTML='<div style="display:grid;gap:12px"><img alt="Generated poster preview" src="'+url+'" style="display:block;width:100%;max-height:720px;object-fit:contain;margin:auto;border-radius:12px;background:#edf1f7"><a class="btn" style="display:block;text-align:center" download="campus-creatives-poster.png" href="'+url+'">Download high-resolution PNG</a><small style="color:#718096">Offline graphic composition • no API or credits used. AI-generated photography is not included.</small></div>';
    $('designerMsg').textContent='Poster composition ready. Download the PNG to use it.';
   };
-  const finishWithLogo=()=>{
-   if(logo){const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{const maxW=w*.16,maxH=h*.12,scale=Math.min(maxW/im.naturalWidth,maxH/im.naturalHeight);const iw=im.naturalWidth*scale,ih=im.naturalHeight*scale;x.drawImage(im,w-pad-iw,h*.065,iw,ih);try{finish(c.toDataURL('image/png'))}catch(err){$('designerMsg').textContent='Logo loaded, but browser security blocked PNG export. Re-upload logo to the public cc-assets bucket.';finish(c.toDataURL('image/png'))}};im.onerror=()=>{ $('designerMsg').textContent='Saved logo URL could not load. Open Brand Profile, upload the logo again, then Save.';finish(c.toDataURL('image/png'))};im.src=logo}
-   else { $('designerMsg').textContent='No logo URL is saved for this selected brand. Upload the logo and press Save brand profile.';finish(c.toDataURL('image/png'))}
+  const finishWithLogo=async()=>{
+   if(!logo){
+    $('designerMsg').textContent='No logo URL is saved for this selected brand. Open Brand Profile, upload the logo and save again.';
+    finish(c.toDataURL('image/png'));return;
+   }
+   try{
+    // Fetch as a CORS-readable blob before drawing, so PNG export includes the logo.
+    const response=await fetch(logo,{mode:'cors',cache:'no-store'});
+    if(!response.ok)throw new Error('Logo request failed ('+response.status+').');
+    const blob=await response.blob();
+    if(!blob.type.startsWith('image/'))throw new Error('Saved logo URL is not an image.');
+    const objectUrl=URL.createObjectURL(blob);
+    const im=new Image();
+    im.onload=()=>{
+     const maxW=w*.19,maxH=h*.14,scale=Math.min(maxW/im.naturalWidth,maxH/im.naturalHeight);
+     const iw=im.naturalWidth*scale,ih=im.naturalHeight*scale;
+     // White logo plate ensures transparent/white logos remain visible.
+     rr(x,w-pad-iw-w*.025,h*.065,iw+w*.025,ih+w*.025,10,'#ffffff','#e5eaf2');
+     x.drawImage(im,w-pad-iw-w*.0125,h*.077,iw,ih);
+     URL.revokeObjectURL(objectUrl);
+     try{finish(c.toDataURL('image/png'))}
+     catch(err){$('designerMsg').textContent='Logo was loaded but PNG export was blocked by image security settings.';console.error(err)}
+    };
+    im.onerror=()=>{URL.revokeObjectURL(objectUrl);$('designerMsg').textContent='Saved logo file could not be decoded. Please upload PNG, JPG or WEBP again.';finish(c.toDataURL('image/png'))};
+    im.src=objectUrl;
+   }catch(err){
+    $('designerMsg').textContent='Logo could not be loaded: '+err.message+' Check that cc-assets is public, then re-upload the logo.';
+    finish(c.toDataURL('image/png'));
+   }
   };
   finishWithLogo();
  }
