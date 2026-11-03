@@ -52,6 +52,14 @@
   if(error){note('ccUpdateMsg',error.message);return}
   el.innerHTML='<option value="">General update</option>'+(data||[]).map(p=>'<option value="'+p.id+'">'+esc(p.project_name)+'</option>').join('');
  }
+
+ async function loadApprovalResponses(){
+  const {data,error}=await sb.from('cc_approval_responses').select('id,decision,feedback,created_at,clients(name),client_approvals(project_name)').order('created_at',{ascending:false}).limit(100);
+  if(error){$('ccApprovalResponses').textContent=error.message;return}
+  $('ccApprovalResponses').innerHTML=(data||[]).length?'<table><thead><tr><th>Client</th><th>Design / Project</th><th>Decision</th><th>Feedback</th><th>Received</th></tr></thead><tbody>'+(data||[]).map(x=>'<tr><td>'+esc(x.clients?.name||'')+'</td><td>'+esc(x.client_approvals?.project_name||'')+'</td><td><span class="pill">'+esc(x.decision)+'</span></td><td>'+esc(x.feedback||'—')+'</td><td>'+new Date(x.created_at).toLocaleString('en-IN')+'</td></tr>').join('')+'</tbody></table>':'<div class="empty">No client portal approval responses yet.</div>';
+ }
+ $('ccRefreshApprovalResponses')?.addEventListener('click',loadApprovalResponses);
+
  async function loadClientUpdates(){
   await fillClientSelects();
   const {data,error}=await sb.from('cc_client_updates').select('*,clients(name),client_projects(project_name)').order('created_at',{ascending:false}).limit(40);
@@ -93,5 +101,5 @@
  $('ccSocialForm')?.addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.target);['client_id','scheduled_at','asset_url','caption','hashtags','published_url'].forEach(k=>{if(!v[k])v[k]=null});if(v.scheduled_at)v.scheduled_at=new Date(v.scheduled_at).toISOString();const {error}=await sb.from('cc_social_posts').insert(v);if(error){note('ccSocialMsg',error.message);return}e.target.reset();note('ccSocialMsg','Content plan saved.');loadSocial()});
  $('ccCampaignForm')?.addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.target);['budget','spend','leads','conversions','attributed_revenue'].forEach(k=>v[k]=Number(v[k]||0));['client_id','objective','start_date','end_date','notes'].forEach(k=>{if(!v[k])v[k]=null});const {error}=await sb.from('cc_campaigns').insert(v);if(error){note('ccCampaignMsg',error.message);return}e.target.reset();note('ccCampaignMsg','Campaign saved.');loadCampaigns()});
  $('ccRefreshLinks')?.addEventListener('click',loadLinks);$('ccRefreshSocial')?.addEventListener('click',loadSocial);$('ccRefreshCampaigns')?.addEventListener('click',loadCampaigns);$('ccRefreshPerformance')?.addEventListener('click',loadPerformance);
- document.querySelectorAll('.navbtn[data-page]').forEach(b=>b.addEventListener('click',()=>{const p=b.dataset.page;if(p==='overview')loadCommandCenter();if(p==='uploads')loadAssetFolders();if(p==='clientportal'){loadLinks();loadClientUpdates();}if(p==='social')loadSocial();if(p==='campaigns')loadCampaigns();if(p==='performance')loadPerformance();if(['projects','invoices','approvals'].includes(p))fillClientSelects()}));
+ document.querySelectorAll('.navbtn[data-page]').forEach(b=>b.addEventListener('click',()=>{const p=b.dataset.page;if(p==='approvals')loadApprovalResponses();if(p==='overview')loadCommandCenter();if(p==='uploads')loadAssetFolders();if(p==='clientportal'){loadLinks();loadClientUpdates();}if(p==='social')loadSocial();if(p==='campaigns')loadCampaigns();if(p==='performance')loadPerformance();if(['projects','invoices','approvals'].includes(p))fillClientSelects()}));
 })();
