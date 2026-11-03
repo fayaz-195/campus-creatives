@@ -146,6 +146,33 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 .proof-inner p{color:#b2c3da;max-width:570px;font-size:13px;line-height:1.8;margin:0}
 .proof-note{flex:none;border:1px solid #ffd32966;border-radius:10px;padding:18px 20px;color:#ffdf69;font-size:11px;font-weight:800;letter-spacing:1px}
 @media(max-width:760px){.case-grid,.insight-grid{grid-template-columns:1fr}.proof-inner{display:block}.proof-note{display:inline-block;margin-top:20px}}
+/* Premium education-focus + identity showcase refresh */
+.trust{position:relative;overflow:hidden;padding:24px 0 30px;background:radial-gradient(ellipse at 50% 0%,#174a8d55,transparent 68%),linear-gradient(120deg,#081a35,#0d2850 50%,#081a35);border-block:1px solid #5d83b533}
+.trust:before{content:"";position:absolute;left:50%;top:0;width:min(620px,90vw);height:2px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,var(--yellow),#55a0ff,transparent);box-shadow:0 0 22px #ffd32988}
+.trust-row{grid-template-columns:1fr;max-width:850px;position:relative}.trust-item{border:0!important;padding:8px 14px;text-align:center}
+.trust-item b{display:block;font:900 clamp(32px,6vw,54px)/1.05 Manrope;letter-spacing:2px;color:var(--yellow);text-shadow:0 0 28px #ffd32922}
+.trust-item span{font-size:11px;letter-spacing:5px;margin-top:13px;color:#c5d5ee}
+.trust-item span:before,.trust-item span:after{content:"";display:inline-block;vertical-align:middle;width:34px;height:1px;margin:0 13px;background:linear-gradient(90deg,transparent,#ffd329)}
+.trust-item span:after{transform:scaleX(-1)}
+.about-grid{gap:clamp(32px,6vw,82px)}
+.showcase{height:clamp(360px,40vw,500px);isolation:isolate;border:1px solid #6e9bd477;border-radius:22px;background:radial-gradient(ellipse at 50% 45%,#1b63c477 0%,#10366b55 34%,transparent 68%),linear-gradient(145deg,#102b53,#071832 75%);box-shadow:inset 0 1px #ffffff20,0 28px 75px #0005;transition:transform .5s,border-color .5s,box-shadow .5s}
+.showcase:hover{transform:translateY(-7px);border-color:#ffd329aa;box-shadow:inset 0 1px #ffffff25,0 35px 85px #0007,0 0 45px #1c65c522}
+.showcase:before{background:repeating-linear-gradient(135deg,transparent 0 26px,#ffffff08 27px 28px);opacity:.8}
+.showcase:after{content:"";position:absolute;inset:16px;border:1px solid #9fc4ff24;border-radius:14px;pointer-events:none}
+.showcase-logo{width:100%;display:grid;place-items:center;padding:26px;animation:showcaseFloat 7s ease-in-out infinite}
+.showcase-logo img{width:min(330px,78%);max-height:280px;object-fit:contain;filter:drop-shadow(0 22px 32px #0008);transition:transform .55s cubic-bezier(.2,.8,.2,1),filter .55s}
+.showcase:hover .showcase-logo img{transform:scale(1.045);filter:drop-shadow(0 28px 36px #0009)}
+.showcase-tag{left:0;right:0;bottom:27px;text-align:center;color:#b6c9e6;font-size:10px;letter-spacing:3.2px}
+.showcase-tag:before{content:"✦";color:var(--yellow);margin-right:12px}
+.about-copy .kicker{display:flex;align-items:center;gap:12px}.about-copy .kicker:after{content:"";display:block;width:54px;height:1px;background:linear-gradient(90deg,var(--yellow),transparent)}
+.about-copy .section-head{margin:16px 0 22px}.about-copy .section-head h2{font-size:clamp(38px,5.2vw,64px);line-height:1.04;letter-spacing:-2.8px;text-wrap:balance}
+.about-copy p{font-size:14px;line-height:2;color:#bdcce1}
+.chip{border-radius:30px;padding:10px 15px;background:#ffffff08;transition:.25s}.chip:hover{border-color:var(--yellow);background:#ffd32912;color:#fff;transform:translateY(-3px)}
+@keyframes showcaseFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media(max-width:850px){.trust{padding:28px 0}.trust-item{padding:10px}.trust-item b{font-size:40px}.about-grid{gap:38px}.showcase{height:clamp(340px,78vw,430px)}}
+@media(max-width:560px){.trust{padding:25px 0 29px}.trust-item b{font-size:38px}.trust-item span{font-size:9px;letter-spacing:3px}.trust-item span:before,.trust-item span:after{width:20px;margin:0 8px}.showcase{height:390px;border-radius:18px}.showcase-logo{padding:18px}.showcase-logo img{width:min(330px,88%);max-height:255px}.showcase-tag{font-size:8px;letter-spacing:2px;bottom:25px}.about-copy .section-head h2{font-size:43px;letter-spacing:-2px}}
+@media(prefers-reduced-motion:reduce){.showcase-logo{animation:none}.showcase,.showcase-logo img,.chip{transition:none}}
+
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"Campus Creatives","url":"https://campus-creatives.pages.dev/","logo":"https://campus-creatives.pages.dev/campus-creatives-logo.webp","description":"Creative branding, graphic design, printing and digital marketing for educational institutions.","telephone":"+91-8919572195","areaServed":{"@type":"Country","name":"India"},"sameAs":[]}
