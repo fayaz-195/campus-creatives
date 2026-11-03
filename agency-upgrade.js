@@ -34,6 +34,7 @@
   $('ccCmdTasks').textContent=tasks.filter(x=>x.status!=='Done').length;
  }
 
+ window.ccLoadCommandCenter=loadCommandCenter;
  async function loadLinks(){
   await fillClientSelects();
   const {data,error}=await sb.from('cc_client_users').select('id,client_id,user_id,email,is_active,created_at,clients(name)').order('created_at',{ascending:false});
