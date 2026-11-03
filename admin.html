@@ -417,7 +417,7 @@ td b{color:#1c2c47;font-weight:700}
 </div></div>
 <div id="appView" class="shell hidden">
  <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div><button id="menuToggle" class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobileAdminNav"><span class="menu-icon">☰</span><span>Menu</span></button></div>
- <nav id="mobileAdminNav"><button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button><button class="navbtn" data-page="enquiries">✉ &nbsp; Enquiries</button><button class="navbtn" data-page="portfolio">▧ &nbsp; Portfolio</button><button class="navbtn" data-page="projects">◷ &nbsp; Client Projects</button><button class="navbtn" data-page="uploads">↑ &nbsp; Upload Assets</button><button class="navbtn" data-page="clients">♙ &nbsp; Clients</button><button class="navbtn" data-page="tasks">☑ &nbsp; Tasks</button><button class="navbtn" data-page="invoices">₹ &nbsp; Invoices</button><button class="navbtn" data-page="approvals">✓ &nbsp; Approvals</button></nav>
+ <nav id="mobileAdminNav"><button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button><button class="navbtn" data-page="enquiries">✉ &nbsp; Enquiries</button><button class="navbtn" data-page="portfolio">▧ &nbsp; Portfolio</button><button class="navbtn" data-page="projects">◷ &nbsp; Client Projects</button><button class="navbtn" data-page="uploads">↑ &nbsp; Upload Assets</button><button class="navbtn" data-page="clients">♙ &nbsp; Clients</button><button class="navbtn" data-page="tasks">☑ &nbsp; Tasks</button><button class="navbtn" data-page="invoices">₹ &nbsp; Invoices</button><button class="navbtn" data-page="approvals">✓ &nbsp; Approvals</button><button class="navbtn" data-page="designer">✦ &nbsp; AI Designer</button></nav>
  <div class="side-foot">We Create. Colleges Connect.<br>© Campus Creatives</div></aside>
  <main class="main"><header class="top"><h2 id="pageTitle">Overview</h2><div class="topright"><span id="userEmail"></span><div class="avatar">CC</div><button class="btn light small" id="changePasswordBtn">Change Password</button><button class="btn light small" id="logoutBtn">Logout</button></div></header>
  <div class="content">
@@ -433,6 +433,32 @@ td b{color:#1c2c47;font-weight:700}
  <section id="tasks" class="section"><div class="welcome"><div><h1>Tasks & Calendar</h1><p>Organise creative work, priorities and deadlines.</p></div><button class="btn" onclick="openModal('taskModal')">+ Add task</button></div><div class="panel"><div id="tasksTable" class="table-wrap"><div class="empty">Loading tasks…</div></div></div></section>
  <section id="invoices" class="section"><div class="welcome"><div><h1>Invoices & Billing</h1><p>Create invoices and track payment status.</p></div><button class="btn" onclick="openModal('invoiceModal')">+ Create invoice</button></div><div class="panel"><div id="invoicesTable" class="table-wrap"><div class="empty">Loading invoices…</div></div></div></section>
  <section id="approvals" class="section"><div class="welcome"><div><h1>Client Approvals</h1><p>Prepare design previews and record approval decisions.</p></div><button class="btn" onclick="openModal('approvalModal')">+ Request approval</button></div><div class="panel"><div id="approvalsTable" class="table-wrap"><div class="empty">Loading approvals…</div></div></div></section>
+ <section id="designer" class="section">
+ <div class="welcome"><div><h1>AI Poster & Calendar Designer</h1><p>Describe the design you want. Save each client's brand details for automatic placement.</p></div></div>
+ <div class="grid2">
+  <div class="panel"><div class="panel-head"><h3>1. Client Brand Profile</h3><button class="btn light small" id="refreshBrands">↻ Refresh</button></div>
+   <form id="brandForm">
+    <div class="field"><label>Choose saved client</label><select id="brandSelect"><option value="">New brand profile</option></select></div>
+    <div class="field"><label>Client / Institution name</label><input name="brand_name" required placeholder="e.g. Agastya Junior College"></div>
+    <div class="field"><label>Logo file</label><input id="brandLogo" type="file" accept="image/png,image/jpeg,image/webp"></div>
+    <div class="field"><label>Mobile number</label><input name="phone" placeholder="+91 ..."></div>
+    <div class="field"><label>Website</label><input name="website" placeholder="https://..."></div>
+    <div class="field"><label>Address</label><textarea name="address" rows="2" placeholder="Full address"></textarea></div>
+    <div class="grid2"><div class="field"><label>Primary colour</label><input name="primary_color" type="color" value="#07152e"></div><div class="field"><label>Accent colour</label><input name="secondary_color" type="color" value="#f5c400"></div></div>
+    <div class="field"><label>Default language</label><select name="language"><option>English</option><option>Telugu</option><option>Telugu + English</option></select></div>
+    <button class="btn full" type="submit">Save brand profile</button><div id="brandMsg" class="msg"></div>
+   </form><div id="brandList" class="empty">Saved brand profiles will appear here.</div>
+  </div>
+  <div class="panel"><div class="panel-head"><h3>2. Describe your design</h3></div>
+   <div class="field"><label>Design type</label><select id="designType"><option>Instagram Post (1080 × 1080)</option><option>Instagram Story (1080 × 1920)</option><option>Instagram Portrait (1080 × 1350)</option><option>A4 Poster</option><option>Monthly Calendar (A4)</option><option>Wall Calendar</option><option>Facebook Cover</option><option>WhatsApp Poster</option></select></div>
+   <div class="field"><label>Design prompt</label><textarea id="designPrompt" rows="7" placeholder="Example: Create an admissions open poster with a premium royal blue and gold theme, a confident student photo, bold modern typography, clear course highlights and a strong call to action..."></textarea></div>
+   <div class="field"><label>Extra text to include</label><textarea id="designText" rows="3" placeholder="Headlines, dates, offers, contact details, disclaimers..."></textarea></div>
+   <div class="field"><label>Style</label><select id="designStyle"><option>Premium corporate</option><option>Modern minimal</option><option>Bold advertising</option><option>Creative editorial</option><option>Festive colourful</option><option>Academic / education</option></select></div>
+   <button class="btn full" id="generateDesignBtn" type="button">✦ Generate design</button><p class="msg" id="designerMsg">Brand profiles save now. AI image generation will activate after the secure image-generation API is connected.</p>
+  </div>
+ </div>
+ <div class="panel"><div class="panel-head"><h3>3. Design preview & downloads</h3></div><div id="designPreview" class="empty">Your generated poster or calendar preview will appear here.</div></div>
+ </section>
  </div></main>
 </div>
 <div id="passwordModal" class="modal hidden"><div class="modal-card"><div class="modal-head"><h3>Change administrator password</h3><button class="close" onclick="closeModal('passwordModal')">✕</button></div><p class="sub">Choose a new private password. Use at least 12 characters.</p><form id="passwordForm"><div class="field"><label>New password</label><input name="newPassword" type="password" autocomplete="new-password" minlength="12" required></div><div class="field"><label>Confirm new password</label><input name="confirmPassword" type="password" autocomplete="new-password" minlength="12" required></div><button class="btn full">Update password</button></form><div id="passwordMsg" class="msg"></div></div></div>
@@ -451,7 +477,7 @@ let currentUser=null;let enteringAdmin=false;
 const $=id=>document.getElementById(id);
 function msg(id,text){$(id).textContent=text}
 function openModal(id){$(id).classList.remove('hidden')}function closeModal(id){$(id).classList.add('hidden')}
-function showPage(page){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(page).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('pageTitle').textContent=({overview:'Overview',enquiries:'Enquiries',portfolio:'Portfolio',projects:'Client Projects',uploads:'Asset Library',clients:'Client CRM',tasks:'Tasks & Calendar',invoices:'Invoices & Billing',approvals:'Client Approvals'})[page]||page;if(page==='enquiries')loadEnquiries();if(page==='portfolio')loadPortfolio();if(page==='projects')loadProjects();if(page==='uploads')loadAssets();if(page==='clients')loadClients();if(page==='tasks')loadTasks();if(page==='invoices')loadInvoices();if(page==='approvals')loadApprovals()}
+function showPage(page){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(page).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('pageTitle').textContent=({overview:'Overview',enquiries:'Enquiries',portfolio:'Portfolio',projects:'Client Projects',uploads:'Asset Library',clients:'Client CRM',tasks:'Tasks & Calendar',invoices:'Invoices & Billing',approvals:'Client Approvals',designer:'AI Poster & Calendar Designer'})[page]||page;if(page==='enquiries')loadEnquiries();if(page==='portfolio')loadPortfolio();if(page==='projects')loadProjects();if(page==='uploads')loadAssets();if(page==='clients')loadClients();if(page==='tasks')loadTasks();if(page==='invoices')loadInvoices();if(page==='approvals')loadApprovals();if(page==='designer')loadBrandProfiles()}
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 
 const menuToggle=$('menuToggle');
@@ -491,6 +517,42 @@ $('clientForm').addEventListener('submit',async e=>{e.preventDefault();const v=O
 $('taskForm').addEventListener('submit',async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target));if(!v.due_date)v.due_date=null;const {error}=await sb.from('admin_tasks').insert(v);if(error){msg('taskMsg',error.message);return}closeModal('taskModal');e.target.reset();loadTasks()});
 $('invoiceForm').addEventListener('submit',async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target));v.amount=Number(v.amount);if(!v.due_date)v.due_date=null;const {error}=await sb.from('invoices').insert(v);if(error){msg('invoiceMsg',error.message);return}closeModal('invoiceModal');e.target.reset();loadInvoices()});
 $('approvalForm').addEventListener('submit',async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target));const {error}=await sb.from('client_approvals').insert(v);if(error){msg('approvalMsg',error.message);return}closeModal('approvalModal');e.target.reset();loadApprovals()});
+
+
+let brandProfiles=[];
+async function loadBrandProfiles(){
+ const {data,error}=await sb.from('creative_brand_profiles').select('*').order('created_at',{ascending:false});
+ if(error){msg('brandMsg',error.message);return}
+ brandProfiles=data||[];
+ $('brandSelect').innerHTML='<option value="">New brand profile</option>'+brandProfiles.map(b=>'<option value="'+b.id+'">'+esc(b.brand_name)+'</option>').join('');
+ $('brandList').innerHTML=brandProfiles.length?'<div class="table-wrap">'+table(['Brand','Phone / Website',''],brandProfiles.map(b=>'<tr><td><b>'+esc(b.brand_name)+'</b></td><td>'+esc(b.phone||'—')+'<br>'+esc(b.website||'')+'</td><td><button class="btn light small" data-use-brand="'+b.id+'">Use</button></td></tr>'))+'</div>':'<div class="empty">No brand profiles saved yet.</div>';
+ document.querySelectorAll('[data-use-brand]').forEach(btn=>btn.onclick=()=>{ $('brandSelect').value=btn.dataset.useBrand; $('brandSelect').dispatchEvent(new Event('change')); });
+}
+$('brandSelect').addEventListener('change',()=>{
+ const b=brandProfiles.find(x=>x.id===$('brandSelect').value);const f=$('brandForm');f.reset();
+ if(!b)return;
+ ['brand_name','phone','website','address','primary_color','secondary_color','language'].forEach(k=>{if(f.elements[k])f.elements[k].value=b[k]||''});
+});
+$('refreshBrands').addEventListener('click',loadBrandProfiles);
+$('brandForm').addEventListener('submit',async e=>{
+ e.preventDefault();const f=e.target;const v=Object.fromEntries(new FormData(f));delete v.logo;
+ const id=$('brandSelect').value;const file=$('brandLogo').files[0];
+ if(file){if(file.size>5*1024*1024){msg('brandMsg','Logo must be 5 MB or smaller.');return}
+  const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');const path='brand-logos/'+Date.now()+'-'+safe;
+  const up=await sb.storage.from('cc-assets').upload(path,file,{upsert:false});if(up.error){msg('brandMsg',up.error.message);return}
+  v.logo_url=sb.storage.from('cc-assets').getPublicUrl(up.data.path).data.publicUrl;
+ }
+ msg('brandMsg','Saving brand profile…');
+ const result=id?await sb.from('creative_brand_profiles').update(v).eq('id',id):await sb.from('creative_brand_profiles').insert(v);
+ if(result.error){msg('brandMsg',result.error.message);return}
+ f.reset();$('brandSelect').value='';msg('brandMsg','Brand profile saved.');await loadBrandProfiles();
+});
+$('generateDesignBtn').addEventListener('click',()=>{
+ const prompt=$('designPrompt').value.trim();if(!prompt){msg('designerMsg','Please describe the poster or calendar first.');return}
+ const brand=brandProfiles.find(x=>x.id===$('brandSelect').value);
+ if(!brand&&!$('brandForm').elements.brand_name.value.trim()){msg('designerMsg','Select a saved brand or save a new brand profile first.');return}
+ msg('designerMsg','Your prompt and brand details are ready. Connect a secure image-generation API key to enable actual poster rendering and PNG downloads.');
+});
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 (async()=>{const {data:{session}}=await sb.auth.getSession();if(session?.user)await enter(session.user)})();
