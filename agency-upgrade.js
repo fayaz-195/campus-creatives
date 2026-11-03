@@ -10,6 +10,17 @@
   if(error){note('ccClientLinkMsg',error.message);return}
   ['ccPortalClient','ccSocialClient','ccCampaignClient','ccProjectClient','ccInvoiceClient','ccApprovalClient','ccUpdateClient'].forEach(id=>{const el=$(id);if(!el)return;const empty=el.options[0]?.outerHTML||'<option value="">Select client</option>';el.innerHTML=empty+(data||[]).map(c=>'<option value="'+c.id+'">'+esc(c.name)+(c.institution?' · '+esc(c.institution):'')+'</option>').join('')});
  }
+
+ async function loadCommandCenter(){
+  const [c,a,t]=await Promise.all([sb.from('cc_campaigns').select('spend,attributed_revenue'),sb.from('client_approvals').select('id,status'),sb.from('admin_tasks').select('id,status')]);
+  const err=c.error||a.error||t.error;if(err)return;
+  const campaigns=c.data||[],approvals=a.data||[],tasks=t.data||[];
+  $('ccCmdSpend').textContent=inr(campaigns.reduce((n,x)=>n+Number(x.spend||0),0));
+  $('ccCmdRevenue').textContent=inr(campaigns.reduce((n,x)=>n+Number(x.attributed_revenue||0),0));
+  $('ccCmdApprovals').textContent=approvals.filter(x=>x.status==='Pending').length;
+  $('ccCmdTasks').textContent=tasks.filter(x=>x.status!=='Done').length;
+ }
+
  async function loadLinks(){
   await fillClientSelects();
   const {data,error}=await sb.from('cc_client_users').select('id,client_id,user_id,email,is_active,created_at,clients(name)').order('created_at',{ascending:false});
@@ -69,5 +80,5 @@
  $('ccSocialForm')?.addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.target);['client_id','scheduled_at','asset_url','caption','hashtags','published_url'].forEach(k=>{if(!v[k])v[k]=null});if(v.scheduled_at)v.scheduled_at=new Date(v.scheduled_at).toISOString();const {error}=await sb.from('cc_social_posts').insert(v);if(error){note('ccSocialMsg',error.message);return}e.target.reset();note('ccSocialMsg','Content plan saved.');loadSocial()});
  $('ccCampaignForm')?.addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.target);['budget','spend','leads','conversions','attributed_revenue'].forEach(k=>v[k]=Number(v[k]||0));['client_id','objective','start_date','end_date','notes'].forEach(k=>{if(!v[k])v[k]=null});const {error}=await sb.from('cc_campaigns').insert(v);if(error){note('ccCampaignMsg',error.message);return}e.target.reset();note('ccCampaignMsg','Campaign saved.');loadCampaigns()});
  $('ccRefreshLinks')?.addEventListener('click',loadLinks);$('ccRefreshSocial')?.addEventListener('click',loadSocial);$('ccRefreshCampaigns')?.addEventListener('click',loadCampaigns);$('ccRefreshPerformance')?.addEventListener('click',loadPerformance);
- document.querySelectorAll('.navbtn[data-page]').forEach(b=>b.addEventListener('click',()=>{const p=b.dataset.page;if(p==='clientportal'){loadLinks();loadClientUpdates();}if(p==='social')loadSocial();if(p==='campaigns')loadCampaigns();if(p==='performance')loadPerformance();if(['projects','invoices','approvals'].includes(p))fillClientSelects()}));
+ document.querySelectorAll('.navbtn[data-page]').forEach(b=>b.addEventListener('click',()=>{const p=b.dataset.page;if(p==='overview')loadCommandCenter();if(p==='clientportal'){loadLinks();loadClientUpdates();}if(p==='social')loadSocial();if(p==='campaigns')loadCampaigns();if(p==='performance')loadPerformance();if(['projects','invoices','approvals'].includes(p))fillClientSelects()}));
 })();
