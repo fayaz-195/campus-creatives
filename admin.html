@@ -580,5 +580,5 @@ $('generateDesignBtn').addEventListener('click',()=>{
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 (async()=>{const {data:{session}}=await sb.auth.getSession();if(session?.user)await enter(session.user)})();
 </script>
-<script src="designer-engine.js"></script>
+<script src="designer-engine.js?v=20261103-3"></script>
 </body></html>
