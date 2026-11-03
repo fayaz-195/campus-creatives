@@ -1,60 +1,79 @@
-/* Campus Creatives local design renderer. No API key required. */
+/* Campus Creatives Studio Renderer v2
+ * Offline, browser-local poster composition. No API key or paid service.
+ * This is a graphic renderer, not an AI photo-generation model.
+ */
 (function(){
- const $id=id=>document.getElementById(id);
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+ const hex=(h)=>/^#[0-9a-f]{6}$/i.test(h||'')?h:'#10264b';
+ function rr(c,x,y,w,h,r,fill,stroke){c.beginPath();c.roundRect(x,y,w,h,r);if(fill){c.fillStyle=fill;c.fill()}if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke()}}
+ function wrap(c,text,max,font){c.font=font;const words=String(text||'').split(/\s+/);const out=[];let line='';for(const word of words){const t=line?line+' '+word:word;if(c.measureText(t).width>max&&line){out.push(line);line=word}else line=t}if(line)out.push(line);return out}
  function draw(){
-  const prompt=$id('designPrompt').value.trim();
-  if(!prompt){$id('designerMsg').textContent='Design brief enter cheyyandi.';return;}
-  const brand=(typeof brandProfiles!=='undefined'?brandProfiles:[]).find(x=>x.id===$id('brandSelect').value)||{};
-  const form=$id('brandForm');
-  const val=k=>brand[k]||(form.elements[k]?.value||'');
-  const title=prompt.split(/[.!?\n]/)[0].trim();
-  const type=$id('designType').value;
+  const prompt=$('designPrompt').value.trim(),type=$('designType').value,style=($('designStyle').value||'Premium Editorial').toLowerCase();
+  if(!prompt){$('designerMsg').textContent='Please enter a design brief.';return}
+  const profiles=typeof brandProfiles!=='undefined'?brandProfiles:[];
+  const brand=profiles.find(x=>x.id===$('brandSelect').value)||{};
+  const form=$('brandForm'),v=k=>brand[k]||(form&&form.elements[k]?form.elements[k].value:'');
+  if(!v('brand_name')){$('designerMsg').textContent='Select or complete a brand profile first.';return}
   let w=1080,h=1080;
-  if(type.includes('Story'))h=1920;
-  else if(type.includes('Portrait')||type.includes('WhatsApp'))h=1350;
-  else if(type.includes('A4')){w=1240;h=1754;}
-  else if(type.includes('Calendar')){w=1240;h=1754;}
-  else if(type.includes('Facebook')){w=1640;h=624;}
-  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-  const ctx=canvas.getContext('2d');
-  const primary=val('primary_color')||'#07152e', accent=val('secondary_color')||'#f5c400';
-  const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,primary);g.addColorStop(1,'#183c68');
-  ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-  ctx.globalAlpha=.16;ctx.fillStyle=accent;ctx.beginPath();ctx.arc(w*.88,h*.2,Math.min(w,h)*.28,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
-  ctx.fillStyle=accent;ctx.fillRect(w*.075,h*.075,w*.17,12);
-  const pad=w*.075;
-  ctx.fillStyle='#fff';ctx.font='bold '+Math.round(w*.032)+'px Arial';
-  ctx.fillText((val('brand_name')||'YOUR BRAND').toUpperCase().slice(0,45),pad,h*.14);
-  ctx.fillStyle=accent;ctx.font='bold '+Math.round(w*.018)+'px Arial';
-  ctx.fillText(($id('designStyle').value||'CREATIVE DESIGN').toUpperCase(),pad,h*.19);
-  ctx.fillStyle='#fff';ctx.font='900 '+Math.round(w*.078)+'px Arial';
-  const words=title.toUpperCase().split(/\s+/);let line='',y=h*.34,lines=0;
-  for(const word of words){const next=line?line+' '+word:word;if(ctx.measureText(next).width>w*.82&&line){ctx.fillText(line,pad,y);line=word;y+=w*.09;lines++;if(lines===3)break;}else line=next;}
-  if(line)ctx.fillText(line,pad,y);
-  ctx.fillStyle=accent;ctx.font='600 '+Math.round(w*.027)+'px Arial';
-  const detail=$id('designText').value.trim()||prompt;
-  const chunks=detail.match(/.{1,42}(?:\s|$)/g)||[detail];
-  chunks.slice(0,5).forEach((t,i)=>ctx.fillText(t.trim(),pad,h*.58+i*w*.042));
+  if(/story/i.test(type)){h=1920}else if(/portrait|whatsapp/i.test(type)){h=1350}else if(/A4|calendar/i.test(type)){w=1240;h=1754}else if(/Facebook/i.test(type)){w=1640;h=624}
+  const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d'),p=hex(v('primary_color')),a=hex(v('secondary_color')||'#f5c400'),pad=w*.075;
+  const isLight=/minimal|clean|corporate|elegant/i.test(style),isBold=/bold|energetic|modern|vibrant/i.test(style);
+  const bg=isLight?'#f7f8fb':p,fg=isLight?'#10213d':'#ffffff',muted=isLight?'#59677d':'#dce6f7';
+  x.fillStyle=bg;x.fillRect(0,0,w,h);
+  // Layered editorial geometry
+  if(!isLight){const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,p);g.addColorStop(1,'#071326');x.fillStyle=g;x.fillRect(0,0,w,h)}
+  x.save();x.globalAlpha=isLight?.08:.22;x.fillStyle=a;x.beginPath();x.arc(w*.91,h*.16,Math.min(w,h)*.34,0,Math.PI*2);x.fill();x.restore();
+  x.save();x.globalAlpha=isLight?.06:.13;x.strokeStyle=a;x.lineWidth=Math.max(2,w*.002);for(let i=0;i<8;i++){x.beginPath();x.arc(w*.88,h*.16,Math.min(w,h)*(.12+i*.035),0,Math.PI*2);x.stroke()}x.restore();
+  // Header band / brand lockup
+  rr(x,pad*.72,h*.055,w*.86,h*.105,w*.018,isLight?'#ffffff':'#ffffff12',isLight?'#e4e9f1':'#ffffff22');
+  const logo=v('logo_url');
+  x.fillStyle=a;rr(x,pad,h*.075,w*.012,h*.065,5,a);
+  x.fillStyle=fg;x.font='800 '+Math.round(w*.027)+'px Arial';x.fillText(String(v('brand_name')).toUpperCase().slice(0,36),pad+w*.035,h*.112);
+  x.fillStyle=muted;x.font='600 '+Math.round(w*.012)+'px Arial';x.fillText('OFFICIAL CREATIVE',pad+w*.035,h*.143);
+  // Decorative side label
+  x.save();x.translate(w*.94,h*.54);x.rotate(Math.PI/2);x.fillStyle=a;x.font='700 '+Math.round(w*.013)+'px Arial';x.fillText('CAMPUS CREATIVES  •  DESIGN STUDIO',0,0);x.restore();
+  const title=prompt.split(/[.!?\n]/)[0].trim().toUpperCase();
+  const titleSize=Math.round(w*(isBold?.092:.078)),titleFont='900 '+titleSize+'px Arial';
+  const titleLines=wrap(x,title,w*.79,titleFont).slice(0,4);
+  let y=h*(/calendar/i.test(type)?.235:.34);
+  x.fillStyle=a;x.font='800 '+Math.round(w*.017)+'px Arial';x.fillText(($('designStyle').value||'SIGNATURE SERIES').toUpperCase().slice(0,32),pad,y-w*.055);
+  x.fillStyle=fg;x.font=titleFont;
+  titleLines.forEach(line=>{x.fillText(line,pad,y);y+=titleSize*1.04});
+  // Supporting copy in a clean card
+  const detail=($('designText').value||prompt).trim(),cardY=Math.max(y+w*.045,h*.53),cardH=Math.min(h*.23,h-cardY-w*.22);
+  rr(x,pad,cardY,w*.79,cardH,w*.018,isLight?'#ffffff':'#ffffff12',isLight?'#e6ebf3':'#ffffff24');
+  x.fillStyle=a;x.fillRect(pad,cardY,w*.012,cardH);
+  const bodyFont='500 '+Math.round(w*.024)+'px Arial',lines=wrap(x,detail,w*.70,bodyFont).slice(0,6);
+  x.fillStyle=muted;x.font=bodyFont;lines.forEach((line,i)=>x.fillText(line,pad+w*.035,cardY+w*.06+i*w*.039));
+  // Calendar grid
   if(/calendar/i.test(type)){
-   const now=new Date(),year=now.getFullYear(),month=now.getMonth(),first=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();
-   const gx=pad,gy=h*.39,cw=w*.85/7,ch=h*.052;
-   ctx.fillStyle=accent;ctx.font='bold '+Math.round(w*.021)+'px Arial';
-   ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach((d,i)=>ctx.fillText(d,gx+i*cw,gy));
-   ctx.fillStyle='#fff';ctx.font=Math.round(w*.022)+'px Arial';
-   for(let d=1;d<=days;d++){const n=first+d-1;ctx.fillText(String(d),gx+(n%7)*cw,gy+ch*(1+Math.floor(n/7)));}
+   const now=new Date(),yr=now.getFullYear(),mo=now.getMonth(),first=new Date(yr,mo,1).getDay(),days=new Date(yr,mo+1,0).getDate();
+   const gx=pad,gy=h*.48,cw=w*.79/7,ch=h*.045;
+   x.fillStyle=a;x.font='800 '+Math.round(w*.017)+'px Arial';['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach((d,i)=>x.fillText(d,gx+i*cw,gy));
+   x.strokeStyle=isLight?'#e5eaf2':'#ffffff25';x.lineWidth=2;
+   for(let r=0;r<6;r++){for(let col=0;col<7;col++){const xx=gx+col*cw,yy=gy+ch*(.35+r);x.strokeRect(xx,yy,cw, ch*.92)}}
+   x.fillStyle=fg;x.font='600 '+Math.round(w*.018)+'px Arial';
+   for(let d=1;d<=days;d++){const n=first+d-1;x.fillText(String(d),gx+(n%7)*cw+cw*.12,gy+ch*(.95+Math.floor(n/7)))}
+   x.fillStyle=fg;x.font='800 '+Math.round(w*.04)+'px Arial';x.fillText(now.toLocaleString('en',{month:'long'}).toUpperCase()+' '+yr,pad,h*.43);
   }
-  const foot=[val('phone'),val('website'),val('address')].filter(Boolean).join('  •  ');
-  ctx.fillStyle=accent;ctx.fillRect(0,h*.9,w,5);ctx.fillStyle='#fff';
-  ctx.font='600 '+Math.round(w*.019)+'px Arial';ctx.fillText(foot||'Add contact details in Brand Profile',pad,h*.94,w*.85);
-  const show=url=>{
-   $id('designPreview').className='';
-   $id('designPreview').innerHTML='<div style="display:grid;gap:14px"><img alt="Design preview" src="'+url+'" style="display:block;max-width:100%;max-height:720px;object-fit:contain;margin:auto;border-radius:12px"><a class="btn" style="text-align:center" download="campus-creatives-design.png" href="'+url+'">Download PNG</a><p class="muted">Locally rendered composition. AI-generated photography needs a hosted image model.</p></div>';
-   $id('designerMsg').textContent='Design ready. PNG download available.';
+  // Footer with contact details
+  const foot=[v('phone'),v('website'),v('address')].filter(Boolean).join('   •   ');
+  x.fillStyle=a;x.fillRect(0,h*.91||0,0,0);
+  const fy=h*.91;
+  x.fillStyle=a;x.fillRect(0,h*.91,w,h*.004);
+  x.fillStyle=fg;x.font='700 '+Math.round(w*.017)+'px Arial';x.fillText(foot||'ADD CONTACT DETAILS TO BRAND PROFILE',pad,h*.955,w*.82);
+  const finish=url=>{
+   $('designPreview').className='';
+   $('designPreview').innerHTML='<div style="display:grid;gap:12px"><img alt="Generated poster preview" src="'+url+'" style="display:block;width:100%;max-height:720px;object-fit:contain;margin:auto;border-radius:12px;background:#edf1f7"><a class="btn" style="display:block;text-align:center" download="campus-creatives-poster.png" href="'+url+'">Download high-resolution PNG</a><small style="color:#718096">Offline graphic composition • no API or credits used. AI-generated photography is not included.</small></div>';
+   $('designerMsg').textContent='Poster composition ready. Download the PNG to use it.';
   };
-  const logo=brand.logo_url;
-  if(logo){const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{ctx.drawImage(im,w-pad-w*.13,h*.06,w*.13,w*.13);show(canvas.toDataURL('image/png'));};im.onerror=()=>show(canvas.toDataURL('image/png'));im.src=logo;}
-  else show(canvas.toDataURL('image/png'));
+  const finishWithLogo=()=>{
+   if(logo){const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{x.drawImage(im,w-pad-w*.115,h*.072,w*.105,w*.075);finish(c.toDataURL('image/png'))};im.onerror=()=>finish(c.toDataURL('image/png'));im.src=logo}
+   else finish(c.toDataURL('image/png'));
+  };
+  finishWithLogo();
  }
- const btn=document.getElementById('generateDesignBtn');
- if(btn)btn.addEventListener('click',()=>{try{draw();}catch(e){document.getElementById('designerMsg').textContent='Render error: '+e.message;}});
+ const btn=$('generateDesignBtn');if(btn)btn.addEventListener('click',()=>{try{draw()}catch(e){$('designerMsg').textContent='Could not render: '+e.message}});
 })();
