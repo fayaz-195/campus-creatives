@@ -68,6 +68,79 @@
  .navbtn{padding:8px 9px}
 }
 
+
+/* Complete responsive polish: phone, tablet and desktop */
+:root{scroll-behavior:smooth}
+html{scroll-padding-top:120px;-webkit-text-size-adjust:100%}
+body{min-width:320px;overflow-x:hidden}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #1d4ed855;outline-offset:2px}
+.btn{transition:transform .18s ease,box-shadow .18s ease}
+.btn:active{transform:scale(.98)}
+.navbtn{transition:background .18s ease,color .18s ease}
+.table-wrap{border-radius:10px;overscroll-behavior-x:contain}
+table{white-space:normal}
+td{overflow-wrap:anywhere}
+.statusSel{max-width:100%;border:1px solid var(--line);border-radius:8px;padding:8px;background:#fff;color:var(--ink)}
+.modal{overflow-y:auto;overscroll-behavior:contain}
+.modal-card{width:min(560px,100%);overflow-x:hidden}
+.field input,.field select,.field textarea{min-width:0}
+#assetFile{max-width:100%;font-size:13px}
+@media(max-width:900px){
+ .shell{min-height:100svh}
+ .side{position:sticky;top:0;padding-top:max(9px,env(safe-area-inset-top));}
+ .side nav{scroll-snap-type:x proximity}
+ .navbtn{scroll-snap-align:start}
+ .top{position:relative}
+ .content{width:100%;max-width:900px}
+ .section{min-width:0}
+ .panel,.stat{box-shadow:0 4px 18px #10264b08}
+}
+@media(max-width:560px){
+ .login-wrap{padding:max(14px,env(safe-area-inset-top)) 14px max(14px,env(safe-area-inset-bottom));}
+ .login-card{max-width:430px;margin:auto}
+ .login-card .brand{margin-bottom:24px}
+ .sub{font-size:13px}
+ .side{gap:8px}
+ .side nav{margin:0 -2px}
+ .main{min-width:0}
+ .topright{display:grid;grid-template-columns:auto 1fr 1fr;align-items:center}
+ .topright .avatar{grid-column:1;grid-row:1}
+ #changePasswordBtn{grid-column:2;grid-row:1}
+ #logoutBtn{grid-column:3;grid-row:1}
+ .topright .btn{width:100%;white-space:nowrap}
+ .welcome>.btn{width:100%}
+ .panel-head{flex-wrap:wrap}
+ .panel-head>.btn{flex:0 0 auto}
+ .table-wrap{margin-right:-2px}
+ table{min-width:610px}
+ .empty{padding:20px 12px}
+ .modal{padding:0;align-items:flex-end}
+ .modal-card{width:100%;max-width:none;max-height: min(88svh,760px);padding:18px 16px calc(18px + env(safe-area-inset-bottom));border-radius:20px 20px 0 0}
+ .modal-card form .btn.full{position:sticky;bottom:0}
+ .field input,.field select,.field textarea{font-size:16px}
+ .actions a{display:inline-flex;align-items:center;min-height:40px}
+}
+@media(max-width:380px){
+ .brand b{font-size:14px}
+ .topright{grid-template-columns:30px 1fr 1fr;gap:6px}
+ .topright .btn{font-size:10px;padding:8px 7px}
+ .stats{gap:7px}
+ .stat{padding:12px 9px}
+ .stat span{font-size:9px}
+ .stat strong{font-size:19px}
+ .content{padding-left:9px;padding-right:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*::before,*::after{transition:none!important;animation:none!important}
+}
+@media(min-width:901px) and (max-width:1150px){
+ .shell{grid-template-columns:215px minmax(0,1fr)}
+ .content{padding:24px}
+ .top{padding:0 24px}
+}
+
 </style>
 </head>
 <body>
