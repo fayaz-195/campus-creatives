@@ -28,6 +28,7 @@
   else if(/diwali|deepavali/i.test(text)){title='HAPPY DIWALI';kicker='MAY YOUR LIFE SHINE WITH JOY AND LIGHT';}
   else if(/dussehra|vijayadashami/i.test(text)){title='HAPPY DUSSEHRA';kicker='CELEBRATING THE VICTORY OF GOOD';}
   else if(/ganesh|vinayaka/i.test(text)){title='HAPPY GANESH CHATURTHI';kicker='MAY LORD GANESHA BLESS YOU';}
+  else if(/ramadan|ramadhan|ramzan|ramazan|remedan|eid|bakrid|bakra eid/i.test(text)){title=/eid|bakrid|bakra eid/i.test(text)?'EID MUBARAK':'RAMADAN MUBARAK';kicker='WISHING YOU PEACE, BLESSINGS AND JOY';}
   else if(/independence\\s*day/i.test(text)){title='HAPPY INDEPENDENCE DAY';kicker='CELEBRATING THE SPIRIT OF FREEDOM';}
   else if(/teachers?\\s*day/i.test(text)){title='HAPPY TEACHERS’ DAY';kicker='HONOURING THOSE WHO INSPIRE';}
   if(/admission|admissions|enrol|enroll|join/i.test(text)){title='ADMISSIONS OPEN';kicker='ADMISSIONS '+year;}
