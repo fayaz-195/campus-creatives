@@ -8,7 +8,7 @@
  let lastUrl='',lastBrief='';
  function say(text,who='assistant'){const d=document.createElement('div');d.className='cc-ai-message '+(who==='user'?'cc-ai-user':'cc-ai-assistant');d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;return d}
  function status(t){$('ccAiStatus').textContent=t}
- function brandData(){const list=typeof brandProfiles!=='undefined'?brandProfiles:[];return list.find(b=>b.id===$('brandSelect').value)||{}}
+ async function brandData(){const id=$('brandSelect').value;const list=typeof brandProfiles!=='undefined'?brandProfiles:[];let b=list.find(x=>String(x.id)===String(id));if(!b&&id){const {data,error}=await sb.from('creative_brand_profiles').select('*').eq('id',id).maybeSingle();if(error)throw new Error('Could not load selected brand profile: '+error.message);b=data;}if(!b)throw new Error('Select a saved client brand profile from the dropdown. If you just saved one, tap Refresh and select it again.');return b;}
  function headline(s){let t=s.replace(/https?:\/\/\S+/g,'').split(/[.!?\n]/)[0].trim();t=t.replace(/^(please\s+)?(create|make|design|generate|prepare)\s+(a|an|the)?\s*/i,'');return t.slice(0,64).toUpperCase()}
  async function composite(artBlob,brand,brief){
   const size=$('ccAiSize').value.split('x').map(Number),w=size[0],h=size[1],canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
@@ -36,7 +36,7 @@
  }
  async function run(){
   const brief=promptEl.value.trim();if(!brief){status('First, describe the design you want.');return}
-  const brand=brandData();if(!brand.brand_name){status('Select a saved client brand profile first.');return}
+  const brand=await brandData();if(!brand||!brand.brand_name)throw new Error('Selected brand profile has no institution name.');
   say(brief,'user');promptEl.value='';lastBrief=brief;generate.disabled=true;generate.textContent='Generating…';status('Sending request to secure AI service…');
   const wait=say('Creating the artwork. This can take a little while…');
   try{
