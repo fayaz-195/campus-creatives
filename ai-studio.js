@@ -58,7 +58,7 @@
   const header=ctx.createLinearGradient(0,0,0,topH);header.addColorStop(0,'rgba(5,18,35,.72)');header.addColorStop(1,'rgba(5,18,35,0)');
   ctx.fillStyle=header;ctx.fillRect(0,0,w,topH);
   if(brand.logo_url){
-   try{const logo=await loadImage(brand.logo_url),maxW=w*.42,maxH=h*.105,scale=Math.min(maxW/logo.width,maxH/logo.height),lw=logo.width*scale,lh=logo.height*scale,x=margin,y=Math.round(h*.035);
+   try{const logo=await loadImage(brand.logo_url);if(logo.width/logo.height<1.15)throw new Error('The saved logo file looks like a portrait/mockup image, not a horizontal logo. Upload the original logo file.');const maxW=w*.42,maxH=h*.105,scale=Math.min(maxW/logo.width,maxH/logo.height),lw=logo.width*scale,lh=logo.height*scale,x=margin,y=Math.round(h*.035);
     ctx.save();ctx.shadowColor='rgba(0,0,0,.18)';ctx.shadowBlur=18;ctx.fillStyle='rgba(255,255,255,.97)';ctx.beginPath();ctx.roundRect(x-14,y-12,lw+28,lh+24,16);ctx.fill();ctx.restore();ctx.drawImage(logo,x,y,lw,lh);
    }catch(e){console.warn('Saved logo could not be composited:',e);}
   }
