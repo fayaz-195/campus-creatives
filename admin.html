@@ -416,6 +416,8 @@ td b{color:#1c2c47;font-weight:700}
  .content{box-sizing:border-box!important}
  .section,.panel,.grid2{min-width:0!important;max-width:100%!important}
 }
+
+.cc-ai-chat-panel{display:flex;flex-direction:column;min-height:590px}.cc-ai-status{font-size:11px;font-weight:800;color:#725400;background:#fff4cc;border-radius:20px;padding:5px 9px}.cc-ai-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 14px}.cc-ai-toolbar label{display:grid;gap:5px;flex:1;min-width:145px;font-size:11px;font-weight:700;color:#526176}.cc-ai-toolbar select{width:100%;padding:10px;border:1px solid #dbe2ed;border-radius:9px;background:#fff}.cc-ai-messages{flex:1;min-height:300px;max-height:480px;overflow:auto;background:#f5f7fb;border:1px solid #e4eaf2;border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:10px}.cc-ai-message{max-width:92%;padding:11px 13px;border-radius:13px;font-size:13px;line-height:1.55;white-space:pre-wrap}.cc-ai-assistant{align-self:flex-start;background:#fff;border:1px solid #e3e9f2;color:#26364d}.cc-ai-user{align-self:flex-end;background:#10264b;color:#fff}.cc-ai-composer{margin-top:12px;border:1px solid #dbe2ed;border-radius:13px;padding:10px}.cc-ai-composer textarea{width:100%;border:0!important;outline:0;resize:vertical;min-height:78px}.cc-ai-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.cc-ai-actions span{font-size:10px;color:#7a8799}.cc-ai-preview-img{display:block;width:100%;max-height:760px;object-fit:contain;background:#eef2f7;border-radius:12px}.cc-ai-loading{opacity:.7}.cc-ai-toolbar select:focus,.cc-ai-composer:focus-within{border-color:#4269a5;box-shadow:0 0 0 3px #4269a51a}
 </style>
 </head>
 <body>
@@ -459,15 +461,13 @@ td b{color:#1c2c47;font-weight:700}
     <button class="btn full" type="submit">Save brand profile</button><div id="brandMsg" class="msg"></div>
    </form><div id="brandList" class="empty">Saved brand profiles will appear here.</div>
   </div>
-  <div class="panel"><div class="panel-head"><h3>2. Describe your design</h3></div>
-   <div class="field"><label>Design type</label><select id="designType"><option>Instagram Post (1080 × 1080)</option><option>Instagram Story (1080 × 1920)</option><option>Instagram Portrait (1080 × 1350)</option><option>A4 Poster</option><option>Monthly Calendar (A4)</option><option>Wall Calendar</option><option>Facebook Cover</option><option>WhatsApp Poster</option></select></div>
-   <div class="field"><label>Design prompt</label><textarea id="designPrompt" rows="7" placeholder="Example: Create an admissions open poster with a premium royal blue and gold theme, a confident student photo, bold modern typography, clear course highlights and a strong call to action..."></textarea></div>
-   <div class="field"><label>Extra text to include</label><textarea id="designText" rows="3" placeholder="Headlines, dates, offers, contact details, disclaimers..."></textarea></div>
-   <div class="field"><label>Style</label><select id="designStyle"><option>Premium corporate</option><option>Modern minimal</option><option>Bold advertising</option><option>Creative editorial</option><option>Festive colourful</option><option>Academic / education</option></select></div>
-   <button class="btn full" id="generateDesignBtn" type="button">✦ Generate design</button><p class="msg" id="designerMsg">Brand profiles save now. AI image generation will activate after the secure image-generation API is connected.</p>
+  <div class="panel cc-ai-chat-panel"><div class="panel-head"><h3>2. Campus Creatives AI Studio</h3><span class="cc-ai-status">Prototype</span></div>
+   <div class="cc-ai-toolbar"><label>Canvas size <select id="ccAiSize"><option value="1080x1080">Instagram Post · 1080×1080</option><option value="1080x1920">Instagram Story · 1080×1920</option><option value="1080x1350">Instagram Portrait · 1080×1350</option><option value="1240x1754">A4 Poster · 1240×1754</option></select></label><label>Image model <select id="ccAiModel"><option value="flux">Flux · balanced</option><option value="zimage">Z-Image · fast</option></select></label></div>
+   <div id="ccAiMessages" class="cc-ai-messages"><div class="cc-ai-message cc-ai-assistant">Namaste! Nenu Campus Creatives AI Designer. Mee design idea cheppandi. Selected client logo and brand details ni layout lo reserve chesthanu. Generate button press chesinappudu connected AI image service use avuthundi.</div></div>
+   <div class="cc-ai-composer"><textarea id="ccAiPrompt" rows="3" placeholder="Example: Agastya Junior College admissions poster. Premium royal blue and yellow, realistic Indian students, bold ADMISSIONS OPEN headline..."></textarea><div class="cc-ai-actions"><span>Tip: Telugu or English lo describe cheyyachu.</span><button class="btn" id="ccAiGenerate" type="button">✦ Generate image</button></div></div>
+   <p class="msg" id="ccAiStatus">AI provider connection pending. No paid generation will run until a provider key is configured.</p>
   </div>
- </div>
- <div class="panel"><div class="panel-head"><h3>3. Design preview & downloads</h3></div><div id="designPreview" class="empty">Your generated poster or calendar preview will appear here.</div></div>
+  <div class="panel"><div class="panel-head"><h3>3. Design preview</h3><button class="btn light small" id="ccAiDownload" type="button" disabled>Download PNG</button></div><div id="ccAiPreview" class="empty">Your generated AI artwork will appear here.</div></div>
  </section>
  </div></main>
 </div>
@@ -581,4 +581,5 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 (async()=>{const {data:{session}}=await sb.auth.getSession();if(session?.user)await enter(session.user)})();
 </script>
 <script src="designer-engine.js?v=20261103-3"></script>
+<script src="ai-studio.js?v=20261103-1"></script>
 </body></html>
