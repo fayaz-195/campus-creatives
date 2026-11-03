@@ -548,6 +548,10 @@ td b{color:#1c2c47;font-weight:700}
  #reports .stats{grid-template-columns:repeat(4,1fr)!important}
 }
 
+
+/* Client-wise white-label report print layout */
+.report-brand-header{display:flex;align-items:center;gap:16px;padding:18px 20px;border-left:5px solid var(--report-accent,#f5c400);background:linear-gradient(110deg,var(--report-primary,#07152e),#18345e);color:#fff;border-radius:12px;margin:14px 0}.report-brand-header img{width:68px;height:68px;object-fit:contain;background:#fff;border-radius:9px;padding:5px}.report-brand-header div{display:grid;gap:5px}.report-brand-header b{font:800 20px Manrope}.report-brand-header span,.report-brand-header small{font-size:12px;opacity:.85}.report-controls{margin-bottom:18px}.report-controls .field{margin:4px 0}.report-controls .muted{font-size:12px;color:#718096}
+@media print{body.report-client-print #reports .report-controls{border:0!important;padding:0!important}.report-brand-header{print-color-adjust:exact;-webkit-print-color-adjust:exact}.report-controls .field{display:none!important}#reports .welcome{display:block!important}#reports .welcome:before{display:none!important}#reports .report-brand-header{break-inside:avoid}#reports .stats,#reports .panel{break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -616,7 +620,7 @@ td b{color:#1c2c47;font-weight:700}
   <div class="panel"><div class="panel-head"><h3>Monthly schedule</h3><button class="btn light small" onclick="loadCalendar()">↻ Refresh</button></div><div id="ccCalendarList">Loading calendar…</div></div>
  </section>
  <section id="reports" class="section">
-  <div class="welcome"><div><h1>Business Reports</h1><p>Live summaries calculated from your enquiries, projects, invoices and expenses.</p></div><div class="actions"><button class="btn light" onclick="loadReports()">↻ Refresh reports</button><button class="btn" onclick="window.print()">Print / Save PDF</button></div></div>
+  <div class="welcome"><div><h1 id="reportHeading">Business Reports</h1><p id="reportSubheading">Client-wise performance, collections and delivery summary.</p></div><div class="actions"><button class="btn light" onclick="loadReports()">↻ Refresh reports</button><button class="btn" onclick="window.print()">Print / Save PDF</button></div></div><div class="panel report-controls"><div class="grid2"><div class="field"><label>Report for client</label><select id="reportClient"><option value="">All Campus Creatives</option></select></div><div class="field"><label>Report period</label><select id="reportPeriod"><option value="6">Last 6 months</option><option value="3">Last 3 months</option><option value="12">Last 12 months</option><option value="all">All time</option></select></div></div><div id="reportBrandHeader" class="report-brand-header"><b>CAMPUS CREATIVES</b><span>We Create. Colleges Connect.</span></div><p id="reportScopeNote" class="muted">Studio-wide view. Select a client to generate a client-branded report.</p></div>
   <div class="stats"><div class="stat"><span>Lead conversion</span><strong id="repConversion">0%</strong></div><div class="stat"><span>Active projects</span><strong id="repProjects">0</strong></div><div class="stat"><span>Collection rate</span><strong id="repCollection">0%</strong></div><div class="stat"><span>Net cash (all time)</span><strong id="repNet">₹0</strong></div></div>
   <div class="panel"><div class="panel-head"><h3>Last 6 months — collections vs expenses</h3></div><div id="ccReportChart"></div></div>
   <div class="panel"><div class="panel-head"><h3>Service & lead performance</h3></div><div id="ccReportDetails"></div></div>
@@ -825,17 +829,44 @@ async function loadCalendar(){
 }
 $('ccCalendarMonth').addEventListener('change',loadCalendar);
 async function loadReports(){
- const [l,p,i,e]=await Promise.all([sb.from('enquiries').select('*'),sb.from('client_projects').select('*'),sb.from('invoices').select('*'),sb.from('cc_expenses').select('*')]);
- const err=[l,p,i,e].find(x=>x.error);if(err){$('ccReportDetails').textContent=err.error.message;return}
- const leads=l.data||[],projects=p.data||[],invoices=i.data||[],expenses=e.data||[],closed=leads.filter(x=>x.status==='Closed').length,amount=invoices.reduce((s,x)=>s+Number(x.amount||0),0),paid=invoices.reduce((s,x)=>s+Number(x.amount_paid||0),0),cost=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
- $('repConversion').textContent=(leads.length?Math.round(closed/leads.length*100):0)+'%';$('repProjects').textContent=projects.filter(x=>!['Completed','On Hold'].includes(x.status)).length;$('repCollection').textContent=(amount?Math.round(paid/amount*100):0)+'%';$('repNet').textContent=inr(paid-cost);
- const months=[];const now=new Date();for(let n=5;n>=0;n--){const d=new Date(now.getFullYear(),now.getMonth()-n,1);months.push({key:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'),label:d.toLocaleDateString('en-IN',{month:'short',year:'2-digit'}),paid:0,cost:0})}
+ const clientId=$('reportClient')?.value||'',period=$('reportPeriod')?.value||'6';
+ const [l,p,i,e,cr,br,cl]=await Promise.all([
+  sb.from('enquiries').select('*'),sb.from('client_projects').select('*'),
+  sb.from('invoices').select('*'),sb.from('cc_expenses').select('*'),
+  sb.from('cc_campaigns').select('*'),sb.from('creative_brand_profiles').select('*'),
+  sb.from('clients').select('id,name,institution,phone,email')
+ ]);
+ const err=[l,p,i,e,cr,br,cl].find(x=>x.error);if(err){$('ccReportDetails').textContent=err.error.message;return}
+ const clients=cl.data||[],selected=clients.find(x=>x.id===clientId),brand=(br.data||[]).find(x=>selected&&[selected.name,selected.institution].filter(Boolean).some(n=>String(x.brand_name||'').trim().toLowerCase()===n.trim().toLowerCase()));
+ let leads=l.data||[],projects=p.data||[],invoices=i.data||[],expenses=e.data||[],campaigns=cr.data||[];
+ if(selected){
+  projects=projects.filter(x=>x.client_id===clientId);
+  invoices=invoices.filter(x=>x.client_id===clientId);
+  campaigns=campaigns.filter(x=>x.client_id===clientId);
+  leads=[];
+ }
+ const closed=leads.filter(x=>x.status==='Closed').length,amount=invoices.reduce((s,x)=>s+Number(x.amount||0),0),paid=invoices.reduce((s,x)=>s+Number(x.amount_paid||0),0),cost=expenses.reduce((s,x)=>s+Number(x.amount||0),0);
+ $('repConversion').textContent=(leads.length?Math.round(closed/leads.length*100):0)+'%';
+ $('repProjects').textContent=projects.filter(x=>!['Completed','On Hold'].includes(x.status)).length;
+ $('repCollection').textContent=(amount?Math.round(paid/amount*100):0)+'%';$('repNet').textContent=inr(paid-cost);
+ const months=[],now=new Date(),count=period==='all'?12:Number(period);
+ for(let n=count-1;n>=0;n--){const d=new Date(now.getFullYear(),now.getMonth()-n,1);months.push({key:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'),label:d.toLocaleDateString('en-IN',{month:'short',year:'2-digit'}),paid:0,cost:0})}
  months.forEach(m=>{m.paid=invoices.filter(x=>(x.issue_date||'').slice(0,7)===m.key).reduce((s,x)=>s+Number(x.amount_paid||0),0);m.cost=expenses.filter(x=>(x.expense_date||'').slice(0,7)===m.key).reduce((s,x)=>s+Number(x.amount||0),0)});
  const max=Math.max(1,...months.flatMap(x=>[x.paid,x.cost]));
- $('ccReportChart').innerHTML='<div class="report-bars">'+months.map(m=>'<div class="report-month"><div class="bar-pair"><div class="bar paid" style="height:'+Math.max(3,m.paid/max*130)+'px" title="Collected '+inr(m.paid)+'"></div><div class="bar cost" style="height:'+Math.max(3,m.cost/max*130)+'px" title="Expenses '+inr(m.cost)+'"></div></div><small>'+m.label+'</small><b>'+inr(m.paid-m.cost)+'</b></div>').join('')+'</div><div class="legend"><span>■ Collections</span><span>■ Expenses</span></div>';
+ $('ccReportChart').innerHTML='<div class="report-bars">'+months.map(m=>'<div class="report-month"><div class="bar-pair"><div class="bar paid" style="height:'+Math.max(3,m.paid/max*130)+'px" title="Collected '+inr(m.paid)+'"></div><div class="bar cost" style="height:'+Math.max(3,m.cost/max*130)+'px" title="Expenses '+inr(m.cost)+'"></div></div><small>'+m.label+'</small><b>'+inr(m.paid-m.cost)+'</b></div>').join('')+'</div><div class="legend"><span>■ Collections</span><span>■ Studio expenses (not client-attributed)</span></div>';
  const byService={};leads.forEach(x=>{const k=x.service||'Unspecified';byService[k]=(byService[k]||0)+1});
- $('ccReportDetails').innerHTML='<div class="report-summary"><div><b>'+leads.length+'</b><span>Total leads</span></div><div><b>'+projects.length+'</b><span>Total projects</span></div><div><b>'+inr(amount)+'</b><span>Invoiced</span></div><div><b>'+inr(cost)+'</b><span>Recorded expenses</span></div></div><h4 style="margin:18px 0 8px">Enquiries by service</h4>'+table(['Service','Enquiries'],Object.entries(byService).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<tr><td>'+esc(k)+'</td><td>'+v+'</td></tr>'));
+ const campSpend=campaigns.reduce((s,x)=>s+Number(x.spend||0),0),campRevenue=campaigns.reduce((s,x)=>s+Number(x.attributed_revenue||0),0);
+ $('ccReportDetails').innerHTML='<div class="report-summary"><div><b>'+leads.length+'</b><span>'+(selected?'Client-specific leads not linked':'Studio leads')+'</span></div><div><b>'+projects.length+'</b><span>Projects</span></div><div><b>'+inr(amount)+'</b><span>Invoiced</span></div><div><b>'+inr(cost)+'</b><span>Studio expenses</span></div><div><b>'+inr(campSpend)+'</b><span>Campaign spend</span></div><div><b>'+inr(campRevenue)+'</b><span>Campaign revenue</span></div></div><p class="muted">'+(selected?'Client report: projects, invoices and campaigns are filtered by the selected client. Enquiries and expenses are excluded from client attribution unless linked in the system.':'Studio-wide report.')+'</p>'+(leads.length?'<h4 style="margin:18px 0 8px">Enquiries by service</h4>'+table(['Service','Enquiries'],Object.entries(byService).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<tr><td>'+esc(k)+'</td><td>'+v+'</td></tr>')):'');
+ const heading=selected?(selected.institution||selected.name):'Campus Creatives';
+ $('reportHeading').textContent=selected?heading+' — Performance Report':'Business Reports';
+ $('reportSubheading').textContent=selected?'Confidential client performance summary':'Live studio-wide business summary';
+ const head=$('reportBrandHeader');
+ head.innerHTML=(brand?.logo_url?'<img src="'+esc(brand.logo_url)+'" alt="Client logo">':'')+'<div><b>'+esc(heading)+'</b><span>'+(brand?.website?esc(brand.website):'Client Performance Report')+'</span></div><small>'+(brand?.phone?esc(brand.phone):esc(selected?.email||'Prepared by Campus Creatives'))+'</small>';
+ head.style.setProperty('--report-primary',brand?.primary_color||'#07152e');head.style.setProperty('--report-accent',brand?.secondary_color||'#f5c400');
+ $('reportScopeNote').textContent=selected?'Client-specific: projects, invoices and campaigns. Studio-wide expenses are shown separately and are not assigned to this client.':'All clients and studio operations.';
 }
+$('reportClient')?.addEventListener('change',loadReports);$('reportPeriod')?.addEventListener('change',loadReports);
+
 async function loadNotifications(){
  const [tr,ir,lr,pr]=await Promise.all([sb.from('admin_tasks').select('*').not('due_date','is',null).neq('status','Done'),sb.from('invoices').select('*').not('due_date','is',null).neq('status','Paid'),sb.from('enquiries').select('*').not('follow_up_date','is',null).neq('status','Closed'),sb.from('client_projects').select('*').not('due_date','is',null).neq('status','Completed').neq('status','On Hold')]);
  const err=[tr,ir,lr,pr].find(x=>x.error);if(err){$('ccNotificationsList').textContent=err.error.message;return}
@@ -908,5 +939,5 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 </script>
 <script src="designer-engine.js?v=20261103-3"></script>
 <script src="ai-studio.js?v=20261103-9"></script>
-<script src="agency-upgrade.js?v=20261103-2"></script>
+<script src="agency-upgrade.js?v=20261103-3"></script>
 </body></html>
