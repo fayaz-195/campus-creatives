@@ -24,7 +24,7 @@
   x.fillStyle=bg;x.fillRect(0,0,w,h);
   // Layered editorial geometry
   if(!isLight){const g=x.createLinearGradient(0,0,w,h);g.addColorStop(0,p);g.addColorStop(1,'#071326');x.fillStyle=g;x.fillRect(0,0,w,h)}
-  x.save();x.globalAlpha=isLight?.08:.22;x.fillStyle=a;x.beginPath();x.arc(w*.91,h*.16,Math.min(w,h)*.34,0,Math.PI*2);x.fill();x.restore();
+  x.save();x.globalAlpha=isLight ? 0.08 : 0.22;x.fillStyle=a;x.beginPath();x.arc(w*.91,h*.16,Math.min(w,h)*.34,0,Math.PI*2);x.fill();x.restore();
   x.save();x.globalAlpha=isLight?.06:.13;x.strokeStyle=a;x.lineWidth=Math.max(2,w*.002);for(let i=0;i<8;i++){x.beginPath();x.arc(w*.88,h*.16,Math.min(w,h)*(.12+i*.035),0,Math.PI*2);x.stroke()}x.restore();
   // Header band / brand lockup
   rr(x,pad*.72,h*.055,w*.86,h*.105,w*.018,isLight?'#ffffff':'#ffffff12',isLight?'#e4e9f1':'#ffffff22');
@@ -35,7 +35,7 @@
   // Decorative side label
   x.save();x.translate(w*.94,h*.54);x.rotate(Math.PI/2);x.fillStyle=a;x.font='700 '+Math.round(w*.013)+'px Arial';x.fillText('CAMPUS CREATIVES  •  DESIGN STUDIO',0,0);x.restore();
   const title=prompt.split(/[.!?\n]/)[0].trim().toUpperCase();
-  const titleSize=Math.round(w*(isBold?.092:.078)),titleFont='900 '+titleSize+'px Arial';
+  const titleSize=Math.round(w*(isBold ? 0.092 : 0.078)),titleFont='900 '+titleSize+'px Arial';
   const titleLines=wrap(x,title,w*.79,titleFont).slice(0,4);
   let y=h*(/calendar/i.test(type)?.235:.34);
   x.fillStyle=a;x.font='800 '+Math.round(w*.017)+'px Arial';x.fillText(($('designStyle').value||'SIGNATURE SERIES').toUpperCase().slice(0,32),pad,y-w*.055);
@@ -60,8 +60,6 @@
   }
   // Footer with contact details
   const foot=[v('phone'),v('website'),v('address')].filter(Boolean).join('   •   ');
-  x.fillStyle=a;x.fillRect(0,h*.91||0,0,0);
-  const fy=h*.91;
   x.fillStyle=a;x.fillRect(0,h*.91,w,h*.004);
   x.fillStyle=fg;x.font='700 '+Math.round(w*.017)+'px Arial';x.fillText(foot||'ADD CONTACT DETAILS TO BRAND PROFILE',pad,h*.955,w*.82);
   const finish=url=>{
