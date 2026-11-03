@@ -4,7 +4,7 @@
  function draw(){
   const prompt=$id('designPrompt').value.trim();
   if(!prompt){$id('designerMsg').textContent='Design brief enter cheyyandi.';return;}
-  const brand=window.brandProfiles?.find(x=>x.id===$id('brandSelect').value)||{};
+  const brand=(typeof brandProfiles!=='undefined'?brandProfiles:[]).find(x=>x.id===$id('brandSelect').value)||{};
   const form=$id('brandForm');
   const val=k=>brand[k]||(form.elements[k]?.value||'');
   const title=prompt.split(/[.!?\n]/)[0].trim();
