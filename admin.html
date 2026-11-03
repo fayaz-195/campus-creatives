@@ -406,6 +406,16 @@ td b{color:#1c2c47;font-weight:700}
 }
 @media(min-width:901px){.mobile-menu-toggle{display:none!important}}
 
+
+/* Mobile/tablet full-width correction */
+@media(max-width:900px){
+ html,body,#appView,.shell,.main,.content{width:100%!important;max-width:none!important;min-width:0!important}
+ .shell{display:flex!important;flex-direction:column!important}
+ .main{flex:1 1 auto!important}
+ .side,.top,.content{width:100%!important;max-width:none!important}
+ .content{box-sizing:border-box!important}
+ .section,.panel,.grid2{min-width:0!important;max-width:100%!important}
+}
 </style>
 </head>
 <body>
