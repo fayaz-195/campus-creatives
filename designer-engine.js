@@ -69,8 +69,8 @@
    $('designerMsg').textContent='Poster composition ready. Download the PNG to use it.';
   };
   const finishWithLogo=()=>{
-   if(logo){const im=new Image();im.onload=()=>{const maxW=w*.16,maxH=h*.12,scale=Math.min(maxW/im.naturalWidth,maxH/im.naturalHeight);const iw=im.naturalWidth*scale,ih=im.naturalHeight*scale;x.drawImage(im,w-pad-iw,h*.065,iw,ih);finish(c.toDataURL('image/png'))};im.onerror=()=>{ $('designerMsg').textContent='Logo could not load. Please re-upload the logo in the brand profile.';finish(c.toDataURL('image/png'))};im.src=logo}
-   else { $('designerMsg').textContent='No logo saved for this brand. Upload and save the client logo first.';finish(c.toDataURL('image/png'))}
+   if(logo){const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{const maxW=w*.16,maxH=h*.12,scale=Math.min(maxW/im.naturalWidth,maxH/im.naturalHeight);const iw=im.naturalWidth*scale,ih=im.naturalHeight*scale;x.drawImage(im,w-pad-iw,h*.065,iw,ih);try{finish(c.toDataURL('image/png'))}catch(err){$('designerMsg').textContent='Logo loaded, but browser security blocked PNG export. Re-upload logo to the public cc-assets bucket.';finish(c.toDataURL('image/png'))}};im.onerror=()=>{ $('designerMsg').textContent='Saved logo URL could not load. Open Brand Profile, upload the logo again, then Save.';finish(c.toDataURL('image/png'))};im.src=logo}
+   else { $('designerMsg').textContent='No logo URL is saved for this selected brand. Upload the logo and press Save brand profile.';finish(c.toDataURL('image/png'))}
   };
   finishWithLogo();
  }
