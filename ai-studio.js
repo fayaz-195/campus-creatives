@@ -54,9 +54,10 @@
  async function composite(artBlob,brand,brief){
   const [w,h]=$('ccAiSize').value.split('x').map(Number),canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
   const ctx=canvas.getContext('2d'),artUrl=URL.createObjectURL(artBlob),art=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=artUrl;});
-  const copy=copyFromBrief(brief,brand),primary=/^#[0-9a-f]{6}$/i.test(brand.primary_color||'')?brand.primary_color:'#164b7a',accent=/^#[0-9a-f]{6}$/i.test(brand.secondary_color||'')?brand.secondary_color:'#f36b21';
+  const copy=copyFromBrief(brief,brand),isAgastya=/agastya/i.test(brand.brand_name||''),primary=isAgastya?'#164b7a':(/^#[0-9a-f]{6}$/i.test(brand.primary_color||'')?brand.primary_color:'#164b7a'),accent=isAgastya?'#f36b21':(/^#[0-9a-f]{6}$/i.test(brand.secondary_color||'')?brand.secondary_color:'#f36b21');
   const margin=Math.round(w*.055),min=Math.min(w,h),isPortrait=h>=w;
   function roundedImage(im,x,y,ww,hh,r){ctx.save();ctx.beginPath();ctx.roundRect(x,y,ww,hh,r);ctx.clip();const s=Math.max(ww/im.width,hh/im.height),dw=im.width*s,dh=im.height*s;ctx.drawImage(im,x+(ww-dw)/2,y+(hh-dh)/2,dw,dh);ctx.restore();}
+  function roundedCrop(im,x,y,ww,hh,sx,sy,sw,sh,r){ctx.save();ctx.beginPath();ctx.roundRect(x,y,ww,hh,r);ctx.clip();ctx.drawImage(im,sx,sy,sw,sh,x,y,ww,hh);ctx.restore();}
   function fitText(txt,maxWidth,start,minSize,weight='800'){let size=start;ctx.font=weight+' '+size+'px Arial';while(ctx.measureText(txt).width>maxWidth&&size>minSize){size-=2;ctx.font=weight+' '+size+'px Arial'}return size;}
   try{
    // Clean editorial poster system: bright white canvas, subtle geometry, generous spacing.
@@ -87,11 +88,23 @@
     ctx.fillStyle=primary;ctx.font='700 '+Math.round(min*.033)+'px Arial';ctx.fillText(copy.kicker,w/2,ty+Math.round(h*.055),maxW);
     if(copy.subtitle){ctx.fillStyle=accent;ctx.font='700 '+Math.round(min*.027)+'px Arial';ctx.fillText(copy.subtitle,w/2,ty+Math.round(h*.105),maxW);}
     const artY=Math.round(h*.43),artH=Math.round(h*.39);
-    roundedImage(art,margin,artY,w-margin*2,artH,Math.round(min*.018));
-    if(copy.isMotivational){
-      const labels=['DISCIPLINE','CONCEPTS','PRACTICE','CONFIDENCE','SUCCESS'],baseY=artY+artH-Math.round(h*.035),stepW=(w-margin*2)/labels.length;
-      ctx.font='700 '+Math.round(min*.018)+'px Arial';ctx.textAlign='center';
-      labels.forEach((label,i)=>{const x=margin+i*stepW;ctx.fillStyle='rgba(255,255,255,.94)';ctx.fillRect(x,baseY,stepW-3,Math.round(h*.035));ctx.fillStyle=primary;ctx.fillText(label,x+stepW/2,baseY+Math.round(h*.024),stepW-6);});
+    const admissions=/admission|admissions|enrol|enroll|join/i.test(brief);
+    if(admissions){
+      // Keep the portrait on the right; crop out AI-generated pseudo-letters/signage on the left.
+      const photoX=Math.round(w*.39),photoW=w-margin-photoX,photoY=artY+Math.round(h*.015),photoH=artH-Math.round(h*.015);
+      roundedCrop(art,photoX,photoY,photoW,photoH,Math.round(art.width*.40),0,Math.round(art.width*.60),art.height,Math.round(min*.025));
+      ctx.fillStyle='rgba(255,255,255,.96)';ctx.fillRect(margin,artY+Math.round(h*.035),Math.round(w*.40),artH-Math.round(h*.035));
+      ctx.fillStyle=accent;ctx.fillRect(margin,artY+Math.round(h*.07),Math.round(w*.13),Math.max(5,min*.008));
+      ctx.fillStyle=primary;ctx.textAlign='left';ctx.font='800 '+Math.round(min*.027)+'px Arial';
+      ['DREAM','PREPARE','ACHIEVE'].forEach((word,i)=>ctx.fillText(word,margin,artY+Math.round(h*(.13+i*.075)),Math.round(w*.34)));
+      ctx.fillStyle=accent;ctx.font='700 '+Math.round(min*.018)+'px Arial';ctx.fillText('YOUR FUTURE STARTS HERE',margin,artY+Math.round(h*.37),Math.round(w*.34));
+    }else{
+      roundedImage(art,margin,artY,w-margin*2,artH,Math.round(min*.018));
+      if(copy.isMotivational){
+        const labels=['DISCIPLINE','CONCEPTS','PRACTICE','CONFIDENCE','SUCCESS'],baseY=artY+artH-Math.round(h*.035),stepW=(w-margin*2)/labels.length;
+        ctx.font='700 '+Math.round(min*.018)+'px Arial';ctx.textAlign='center';
+        labels.forEach((label,i)=>{const x=margin+i*stepW;ctx.fillStyle='rgba(255,255,255,.94)';ctx.fillRect(x,baseY,stepW-3,Math.round(h*.035));ctx.fillStyle=primary;ctx.fillText(label,x+stepW/2,baseY+Math.round(h*.024),stepW-6);});
+      }
     }
     ctx.textAlign='left';
    }
