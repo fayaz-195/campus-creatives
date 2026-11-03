@@ -381,6 +381,18 @@ td b{color:#1c2c47;font-weight:700}
 }
 
 
+
+/* Compact, reliable mobile menu button */
+@media(max-width:900px){
+ .side>.brand{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
+ .side>.brand>div:nth-child(2){flex:1;min-width:0}
+ .mobile-menu-toggle{flex:0 0 auto;align-self:center;width:auto;min-width:86px;height:36px;min-height:36px;padding:0 11px;border-radius:9px;font-size:12px}
+ .side nav#mobileAdminNav{display:none!important}
+ .side.menu-open nav#mobileAdminNav{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .side nav#mobileAdminNav .navbtn{min-height:36px;padding:7px 9px;font-size:11px}
+}
+@media(min-width:901px){.mobile-menu-toggle{display:none!important}}
+
 /* Compact mobile hamburger menu */
 .mobile-menu-toggle{display:none}
 @media(max-width:900px){
@@ -404,8 +416,8 @@ td b{color:#1c2c47;font-weight:700}
  <div id="loginMsg" class="msg"></div><div class="notice">Private administrator access. Your PIN is verified securely by Supabase Authentication and is never stored in this page.</div>
 </div></div>
 <div id="appView" class="shell hidden">
- <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div></div>
- <button id="menuToggle" class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobileAdminNav"><span class="menu-icon">☰</span><span>Menu</span></button><nav id="mobileAdminNav"><button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button><button class="navbtn" data-page="enquiries">✉ &nbsp; Enquiries</button><button class="navbtn" data-page="portfolio">▧ &nbsp; Portfolio</button><button class="navbtn" data-page="projects">◷ &nbsp; Client Projects</button><button class="navbtn" data-page="uploads">↑ &nbsp; Upload Assets</button><button class="navbtn" data-page="clients">♙ &nbsp; Clients</button><button class="navbtn" data-page="tasks">☑ &nbsp; Tasks</button><button class="navbtn" data-page="invoices">₹ &nbsp; Invoices</button><button class="navbtn" data-page="approvals">✓ &nbsp; Approvals</button></nav>
+ <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div><button id="menuToggle" class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobileAdminNav"><span class="menu-icon">☰</span><span>Menu</span></button></div>
+ <nav id="mobileAdminNav"><button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button><button class="navbtn" data-page="enquiries">✉ &nbsp; Enquiries</button><button class="navbtn" data-page="portfolio">▧ &nbsp; Portfolio</button><button class="navbtn" data-page="projects">◷ &nbsp; Client Projects</button><button class="navbtn" data-page="uploads">↑ &nbsp; Upload Assets</button><button class="navbtn" data-page="clients">♙ &nbsp; Clients</button><button class="navbtn" data-page="tasks">☑ &nbsp; Tasks</button><button class="navbtn" data-page="invoices">₹ &nbsp; Invoices</button><button class="navbtn" data-page="approvals">✓ &nbsp; Approvals</button></nav>
  <div class="side-foot">We Create. Colleges Connect.<br>© Campus Creatives</div></aside>
  <main class="main"><header class="top"><h2 id="pageTitle">Overview</h2><div class="topright"><span id="userEmail"></span><div class="avatar">CC</div><button class="btn light small" id="changePasswordBtn">Change Password</button><button class="btn light small" id="logoutBtn">Logout</button></div></header>
  <div class="content">
