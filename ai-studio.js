@@ -22,9 +22,12 @@
  function copyFromBrief(brief,brand){
   const text=brief.replace(/https?:\/\/\S+/g,' ').replace(/\s+/g,' ').trim();
   const year=(text.match(/20\d{2}\s*[-–]\s*\d{2,4}/)||[])[0]||'2026–27';
-  const festival=/sri\s*ram|rama\s*navami|ugadi|diwali|deepavali|dussehra|vijayadashami|ganesh|vinayaka|independence\s*day|teachers?\s*day|christmas|sankranti|holi|eid|bakrid|ramzan|ramadan|remedan/i.test(text);
-  let title='YOUR POTENTIAL HAS NO LIMITS',kicker='DREAM. PREPARE. ACHIEVE.',subtitle='';
-  if(/sri\s*ram|rama\s*navami/i.test(text)){title='SRI RAMA NAVAMI';kicker='MAY DHARMA AND PEACE GUIDE EVERY STEP';}
+  const festival=/sri\s*ram|rama\s*navami|ugadi|diwali|deepavali|dussehra|vijayadashami|ganesh|vinayaka|gandhi\s*jayanti|independence\s*day|republic\s*day|teachers?\s*day|children'?s\s*day|christmas|sankranti|holi|eid|bakrid|ramzan|ramadan|remedan|onam|raksha\s*bandhan|women'?s\s*day|yoga\s*day/i.test(text);
+  const education=/admission|admissions|junior college|school|college|student|iit|jee|neet|eapcet|bipc|mpc|mec|cec|scholarship|exam|education|academic/i.test(text);
+  let title='',kicker='',subtitle='';
+  if(/gandhi\s*jayanti/i.test(text)){title='GANDHI JAYANTI';kicker='TRUTH • PEACE • NON-VIOLENCE';}
+  else if(/republic\s*day/i.test(text)){title='HAPPY REPUBLIC DAY';kicker='CELEBRATING THE SPIRIT OF INDIA';}
+  else if(/sri\s*ram|rama\s*navami/i.test(text)){title='SRI RAMA NAVAMI';kicker='MAY DHARMA AND PEACE GUIDE EVERY STEP';}
   else if(/ugadi/i.test(text)){title='HAPPY UGADI';kicker='WISHING YOU A YEAR OF NEW BEGINNINGS';}
   else if(/diwali|deepavali/i.test(text)){title='HAPPY DIWALI';kicker='MAY YOUR LIFE SHINE WITH JOY AND LIGHT';}
   else if(/dussehra|vijayadashami/i.test(text)){title='HAPPY DUSSEHRA';kicker='CELEBRATING THE VICTORY OF GOOD';}
@@ -32,20 +35,26 @@
   else if(/ramadan|ramadhan|ramzan|ramazan|remedan|eid|bakrid|bakra eid/i.test(text)){title=/eid|bakrid|bakra eid/i.test(text)?'EID MUBARAK':'RAMADAN MUBARAK';kicker='WISHING YOU PEACE, BLESSINGS AND JOY';}
   else if(/independence\s*day/i.test(text)){title='HAPPY INDEPENDENCE DAY';kicker='CELEBRATING THE SPIRIT OF FREEDOM';}
   else if(/teachers?\s*day/i.test(text)){title='HAPPY TEACHERS’ DAY';kicker='HONOURING THOSE WHO INSPIRE';}
+  else if(/children'?s\s*day/i.test(text)){title='HAPPY CHILDREN’S DAY';kicker='CELEBRATING EVERY CHILD’S DREAM';}
+  else if(/christmas/i.test(text)){title='MERRY CHRISTMAS';kicker='WISHING YOU LOVE, PEACE AND JOY';}
+  else if(/holi/i.test(text)){title='HAPPY HOLI';kicker='LET COLOURS BRING HAPPINESS';}
+  else if(/onam/i.test(text)){title='HAPPY ONAM';kicker='WISHING YOU A JOYOUS CELEBRATION';}
   else if(/admission|admissions|enrol|enroll|join/i.test(text)){title='ADMISSIONS OPEN';kicker='ADMISSIONS '+year;subtitle='IIT-JEE  •  NEET  •  EAPCET';}
-  else if(/scholarship|talent test/i.test(text)){title='SCHOLARSHIP TEST';kicker='EXCEL WITH AGASTYA';}
+  else if(/scholarship|talent test/i.test(text)){title='SCHOLARSHIP TEST';kicker='UNLOCK YOUR POTENTIAL';}
   else if(/result|results/i.test(text)){title='CELEBRATING SUCCESS';kicker='STUDENT ACHIEVEMENTS';}
   else if(/neet/i.test(text)){title='DREAM BIG. AIM NEET.';kicker='YOUR MEDICAL JOURNEY STARTS HERE';}
   else if(/iit|jee/i.test(text)){title='AIM HIGHER. GO IIT.';kicker='YOUR IIT-JEE JOURNEY STARTS HERE';}
-  else if(/event|fest|celebration|cultural/i.test(text)&&!festival){title='LET’S CELEBRATE';kicker='CAMPUS EVENT';}
   const explicit=text.match(/(?:headline|title)\s*[:\-]\s*([^.;]{3,65})/i);
-  if(explicit)title=explicit[1].trim().toUpperCase();
   const quoted=text.match(/[“"]([^”"]{5,65})[”"]/);
-  if(quoted&&!festival&&!/admission|scholarship|result/i.test(text))title=quoted[1].trim().toUpperCase();
+  const createMatch=text.match(/(?:create|make|design|generate|prepare)\s+(?:a|an|the)?\s*(.{3,75}?)\s+(?:poster|post|banner|creative|flyer|ad)\b/i);
+  if(explicit)title=explicit[1].trim().toUpperCase();
+  else if(quoted)title=quoted[1].trim().toUpperCase();
+  else if(!title&&createMatch)title=createMatch[1].replace(/\b(premium|professional|modern|creative|beautiful|attractive)\b/gi,'').trim().toUpperCase();
+  else if(!title){const words=text.split(/[.!?]/)[0].split(/\s+/).filter(Boolean);title=words.slice(0,7).join(' ').toUpperCase();}
+  if(!kicker)kicker=education?'DREAM. PREPARE. ACHIEVE.':'CELEBRATING THE MOMENT';
   const isMotivational=/motivat|mindset|inspir|success|dream|achiev|potential|limits|discipline/i.test(text);
-  if(isMotivational&&!festival&&!/admission|scholarship|result/i.test(text)&&!explicit&&!quoted){title='YOUR MINDSET DEFINES YOUR LIMITS';kicker='DREAM. PREPARE. ACHIEVE.';}
   if(!subtitle&&!festival&&/\bMPC\b|\bBiPC\b|\bMEC\b|\bCEC\b/i.test(text))subtitle='MPC  •  BiPC  •  MEC  •  CEC';
-  return {title,kicker,subtitle,year,festival,isMotivational};
+  return {title,kicker,subtitle,year,festival,education,isMotivational};
  }
  async function loadImage(url){
   const res=await fetch(url,{mode:'cors'});if(!res.ok)throw new Error('Could not load saved client logo.');const blob=await res.blob(),u=URL.createObjectURL(blob);
