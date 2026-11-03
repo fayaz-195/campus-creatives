@@ -380,6 +380,20 @@ td b{color:#1c2c47;font-weight:700}
  .navbtn{font-size:9px;min-height:36px;padding:6px 3px;border-radius:8px}
 }
 
+
+/* Compact mobile hamburger menu */
+.mobile-menu-toggle{display:none}
+@media(max-width:900px){
+ .side{position:relative!important}
+ .side>.brand{display:flex;align-items:center;justify-content:space-between}
+ .mobile-menu-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:8px 12px;border:1px solid #ffffff25;border-radius:9px;background:#ffffff12;color:#fff;font-size:12px;font-weight:700}
+ .mobile-menu-toggle .menu-icon{font-size:16px;line-height:1}
+ .side nav#mobileAdminNav{display:none!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:8px 0 2px;overflow:visible!important}
+ .side.menu-open nav#mobileAdminNav{display:grid!important}
+ .side nav#mobileAdminNav .navbtn{width:100%;min-width:0;min-height:40px;justify-content:flex-start;text-align:left;white-space:normal;padding:8px 10px;font-size:11px}
+}
+@media(min-width:901px){.mobile-menu-toggle{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -391,7 +405,7 @@ td b{color:#1c2c47;font-weight:700}
 </div></div>
 <div id="appView" class="shell hidden">
  <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div></div>
- <nav><button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button><button class="navbtn" data-page="enquiries">✉ &nbsp; Enquiries</button><button class="navbtn" data-page="portfolio">▧ &nbsp; Portfolio</button><button class="navbtn" data-page="projects">◷ &nbsp; Client Projects</button><button class="navbtn" data-page="uploads">↑ &nbsp; Upload Assets</button><button class="navbtn" data-page="clients">♙ &nbsp; Clients</button><button class="navbtn" data-page="tasks">☑ &nbsp; Tasks</button><button class="navbtn" data-page="invoices">₹ &nbsp; Invoices</button><button class="navbtn" data-page="approvals">✓ &nbsp; Approvals</button></nav>
+ <button id="menuToggle" class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="mobileAdminNav"><span class="menu-icon">☰</span><span>Menu</span></button><nav id="mobileAdminNav"><button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button><button class="navbtn" data-page="enquiries">✉ &nbsp; Enquiries</button><button class="navbtn" data-page="portfolio">▧ &nbsp; Portfolio</button><button class="navbtn" data-page="projects">◷ &nbsp; Client Projects</button><button class="navbtn" data-page="uploads">↑ &nbsp; Upload Assets</button><button class="navbtn" data-page="clients">♙ &nbsp; Clients</button><button class="navbtn" data-page="tasks">☑ &nbsp; Tasks</button><button class="navbtn" data-page="invoices">₹ &nbsp; Invoices</button><button class="navbtn" data-page="approvals">✓ &nbsp; Approvals</button></nav>
  <div class="side-foot">We Create. Colleges Connect.<br>© Campus Creatives</div></aside>
  <main class="main"><header class="top"><h2 id="pageTitle">Overview</h2><div class="topright"><span id="userEmail"></span><div class="avatar">CC</div><button class="btn light small" id="changePasswordBtn">Change Password</button><button class="btn light small" id="logoutBtn">Logout</button></div></header>
  <div class="content">
@@ -427,6 +441,11 @@ function msg(id,text){$(id).textContent=text}
 function openModal(id){$(id).classList.remove('hidden')}function closeModal(id){$(id).classList.add('hidden')}
 function showPage(page){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(page).classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('pageTitle').textContent=({overview:'Overview',enquiries:'Enquiries',portfolio:'Portfolio',projects:'Client Projects',uploads:'Asset Library',clients:'Client CRM',tasks:'Tasks & Calendar',invoices:'Invoices & Billing',approvals:'Client Approvals'})[page]||page;if(page==='enquiries')loadEnquiries();if(page==='portfolio')loadPortfolio();if(page==='projects')loadProjects();if(page==='uploads')loadAssets();if(page==='clients')loadClients();if(page==='tasks')loadTasks();if(page==='invoices')loadInvoices();if(page==='approvals')loadApprovals()}
 document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+
+const menuToggle=$('menuToggle');
+if(menuToggle){menuToggle.addEventListener('click',()=>{const opened=$('.side').classList.toggle('menu-open');menuToggle.setAttribute('aria-expanded',String(opened));menuToggle.querySelector('.menu-icon').textContent=opened?'✕':'☰';menuToggle.lastElementChild.textContent=opened?'Close':'Menu';});}
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{if(window.matchMedia('(max-width: 900px)').matches){$('.side').classList.remove('menu-open');if(menuToggle){menuToggle.setAttribute('aria-expanded','false');menuToggle.querySelector('.menu-icon').textContent='☰';menuToggle.lastElementChild.textContent='Menu';}}}));
+
 async function checkAdmin(user){const {data,error}=await sb.from('admin_users').select('user_id,email,phone').eq('user_id',user.id).maybeSingle();if(error)throw error;if(!data)throw new Error('Your account is signed in, but it has not been approved as an administrator yet. Ask the project owner to approve this email: '+user.email);return data}
 async function enter(user){if(enteringAdmin)return;enteringAdmin=true;currentUser=user;try{await checkAdmin(user);$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('userEmail').textContent='Admin';await refreshAll()}catch(e){await sb.auth.signOut();msg('loginMsg',e.message)}finally{enteringAdmin=false}}
 $('pinLoginBtn').addEventListener('click',async()=>{
