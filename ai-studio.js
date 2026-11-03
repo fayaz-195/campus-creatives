@@ -38,9 +38,10 @@
   else if(/iit|jee/i.test(text)){title='AIM HIGHER. GO IIT.';kicker='YOUR IIT-JEE JOURNEY STARTS HERE';}
   const explicit=text.match(/(?:headline|title)\s*[:\-]\s*([^.;]{3,65})/i);
   if(explicit)title=explicit[1].trim().toUpperCase();
-  const groups=/\bMPC\b/i.test(text)||/\bBiPC\b/i.test(text)||/\bMEC\b/i.test(text)||/\bCEC\b/i.test(text)
+  const isFestival=/sri\s*ram|rama\s*navami|ugadi|diwali|deepavali|dussehra|vijayadashami|ganesh|vinayaka|independence\s*day|teachers?\s*day|christmas|sankranti|holi|eid|bakrid|ramzan/i.test(text);
+  const groups=!isFestival&&( /\bMPC\b/i.test(text)||/\bBiPC\b/i.test(text)||/\bMEC\b/i.test(text)||/\bCEC\b/i.test(text))
    ? 'MPC  •  BiPC  •  MEC  •  CEC'
-   : (/admission|admissions|junior college/i.test(text)?'IIT-JEE  •  NEET  •  EAPCET':'');
+   : (!isFestival&&/admission|admissions|junior college/i.test(text)?'IIT-JEE  •  NEET  •  EAPCET':'');
   return {title,kicker,subtitle:groups,year};
  }
  async function loadImage(url){
