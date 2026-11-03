@@ -141,6 +141,148 @@ td{overflow-wrap:anywhere}
  .top{padding:0 24px}
 }
 
+
+/* CAMPUS CREATIVES — complete premium command-centre redesign */
+:root{
+ --navy:#07152e;--navy2:#10264b;--blue:#2857d9;--yellow:#f5c400;
+ --ink:#101b31;--muted:#71809a;--line:#e5eaf3;--bg:#f3f6fc;--white:#fff;
+ --shadow:0 12px 34px rgba(12,31,67,.07);--shadow-hover:0 18px 42px rgba(12,31,67,.12)
+}
+*{box-sizing:border-box}
+body{background:radial-gradient(ellipse at 85% -10%,#e2eaff 0,transparent 32%),var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif}
+.login-wrap{background:radial-gradient(circle at 15% 18%,#24477f 0,transparent 32%),radial-gradient(circle at 90% 85%,#18345e 0,transparent 34%),linear-gradient(135deg,#050e20,#0d2142 65%,#102b54)}
+.login-card{position:relative;overflow:hidden;border:1px solid #ffffff25;border-radius:26px;padding:42px;background:rgba(255,255,255,.98);box-shadow:0 32px 100px #0006}
+.login-card:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--yellow),#f8df67,var(--blue))}
+.brand{gap:13px}.brand-mark{box-shadow:0 7px 18px #07152e24;border-radius:14px}
+.login-card h1{font-size:32px;letter-spacing:-1.2px;color:var(--navy)}
+.eyebrow{letter-spacing:2.2px}
+.field label{font-size:12px;letter-spacing:.2px}
+.field input,.field select,.field textarea{border:1px solid #dfe5ef;border-radius:12px;padding:13px 14px;transition:border .2s,box-shadow .2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 4px #2857d91a}
+.btn{border-radius:11px;padding:11px 16px;box-shadow:0 4px 10px #07152e0d;transition:transform .18s,box-shadow .18s,filter .18s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px #07152e1a;filter:brightness(1.02)}
+.btn.dark{background:linear-gradient(135deg,#07152e,#173563)}
+.btn.full{padding:14px 18px}
+.notice{border-radius:12px;background:#fff9df;border-color:#f4e4a4}
+.shell{grid-template-columns:264px minmax(0,1fr);gap:0;background:transparent}
+.side{position:sticky;top:0;height:100vh;min-height:100vh;padding:27px 17px 18px;background:linear-gradient(180deg,#07152e 0%,#0a1b38 56%,#10264b 100%);box-shadow:12px 0 36px #07152e12;gap:30px}
+.side:after{content:"";position:absolute;left:17px;right:17px;bottom:58px;height:1px;background:#ffffff18}
+.side .brand{padding:0 8px}.side .brand-mark{background:linear-gradient(145deg,#10264b,#183967);border:1px solid #ffffff20}
+.side nav{gap:8px}
+.navbtn{position:relative;display:flex;align-items:center;min-height:46px;padding:12px 14px;border:1px solid transparent;border-radius:12px;color:#aebbd1;font-size:13px;letter-spacing:.1px;transition:all .2s}
+.navbtn:hover{background:#ffffff0d;color:#fff;transform:translateX(2px)}
+.navbtn.active{background:linear-gradient(100deg,#ffffff1b,#ffffff0b);border-color:#ffffff18;color:#fff;box-shadow:inset 3px 0 0 var(--yellow)}
+.side-foot{font-size:11px;line-height:1.8;letter-spacing:.25px;color:#8193b1}
+.main{min-width:0}
+.top{height:78px;padding:0 36px;background:#ffffffd9;backdrop-filter:blur(16px);border-bottom:1px solid #e6ebf3;position:sticky;top:0;z-index:10}
+.top h2{font-size:17px;letter-spacing:-.3px;color:var(--navy)}
+.topright{gap:11px}
+.avatar{width:38px;height:38px;background:linear-gradient(145deg,#fff5c7,#f8df75);border:1px solid #f1df9d}
+.content{max-width:1500px;padding:34px 36px 52px}
+.welcome{align-items:center;margin-bottom:25px}
+.welcome h1{font-size:29px;letter-spacing:-1px;color:var(--navy)}
+.welcome p{font-size:13px;color:#7a879d}
+.welcome>.btn{box-shadow:0 7px 18px #e3c02a3d}
+.stats{gap:16px;margin-bottom:23px}
+.stat{position:relative;overflow:hidden;min-height:118px;padding:20px 21px;border:1px solid #e7ebf3;border-radius:17px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.stat:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.stat:after{content:"";position:absolute;width:90px;height:90px;right:-30px;top:-35px;border-radius:50%;background:linear-gradient(135deg,#f5c40020,#2857d910)}
+.stat span{position:relative;z-index:1;color:#74829a;font-size:11px;text-transform:uppercase;letter-spacing:1px}
+.stat strong{position:relative;z-index:1;font-size:30px;letter-spacing:-1px;color:var(--navy)}
+.panel{padding:22px;border:1px solid #e7ebf3;border-radius:17px;box-shadow:var(--shadow);margin-bottom:20px}
+.panel-head{margin-bottom:17px}
+.panel h3{font-size:15px;letter-spacing:-.2px;color:var(--navy)}
+.table-wrap{border:1px solid #edf0f6;border-radius:12px}
+table{min-width:680px}
+th{background:#f7f9fd;color:#8793a8;font-size:10px;letter-spacing:1px;padding:13px 12px}
+td{padding:13px 12px;border-bottom:1px solid #edf0f5;color:#344158}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fafbfe}
+td b{color:#17243c}
+td .muted{font-size:11px}
+.pill{background:#eef3ff;color:#3154a0;border:1px solid #e1e9ff;padding:5px 10px}
+.statusSel{border:1px solid #e2e8f2;border-radius:9px;padding:8px 10px;background:#fbfcff;color:#283650}
+.empty{padding:32px 16px;color:#8995a8}
+.actions{align-items:center}
+.small{border-radius:9px}
+.btn.danger{background:#fff0f0}
+.modal{backdrop-filter:blur(5px);background:#061229a8}
+.modal-card{border:1px solid #e7ebf3;border-radius:21px;box-shadow:0 24px 90px #06122940}
+.modal-head{padding-bottom:13px;border-bottom:1px solid #edf0f5;margin-bottom:16px}
+.modal-head h3{color:var(--navy)}
+.close{width:35px;height:35px;border-radius:10px}
+.section.active{animation:sectionIn .28s ease both}
+@keyframes sectionIn{from{opacity:.55;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1100px){
+ .shell{grid-template-columns:230px minmax(0,1fr)}
+ .side{padding-left:13px;padding-right:13px}
+ .content{padding:27px 23px 42px}
+ .top{padding:0 23px}
+ .stats{gap:11px}
+ .stat{padding:17px}
+}
+@media(max-width:900px){
+ .shell{display:flex;flex-direction:column}
+ .side{position:sticky;top:0;height:auto;min-height:0;padding:11px 13px 9px;gap:10px;z-index:30}
+ .side:after{display:none}
+ .side .brand{padding:0 4px}
+ .side nav{display:flex;overflow-x:auto;gap:7px;padding:3px 0 5px;scrollbar-width:none}
+ .side nav::-webkit-scrollbar{display:none}
+ .navbtn{flex:0 0 auto;min-height:39px;padding:9px 13px;font-size:12px}
+ .navbtn:hover{transform:none}
+ .side-foot{display:none}
+ .top{position:relative;height:auto;min-height:62px;padding:11px 17px}
+ .content{padding:22px 17px 38px}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .grid2{grid-template-columns:1fr}
+ .table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+@media(max-width:560px){
+ .login-wrap{padding:16px;min-height:100svh}
+ .login-card{padding:28px 22px;border-radius:21px}
+ .login-card h1{font-size:27px}
+ .side{padding:9px 10px 7px}
+ .side .brand-mark{width:34px;height:34px}
+ .side .brand b{font-size:13px}
+ .side .brand small{font-size:9px}
+ .navbtn{font-size:11px;padding:9px 11px}
+ .top{align-items:flex-start;flex-direction:column;padding:12px 13px;gap:9px}
+ .top h2{font-size:15px}
+ .topright{width:100%;display:grid;grid-template-columns:30px 1fr 1fr;gap:7px}
+ #userEmail{display:none}
+ .topright .btn{width:100%;font-size:11px;padding:9px 8px;white-space:nowrap}
+ .avatar{width:30px;height:30px}
+ .content{padding:17px 11px 30px}
+ .welcome{align-items:flex-start;flex-direction:column;gap:13px;margin-bottom:17px}
+ .welcome h1{font-size:23px}
+ .welcome p{font-size:12px;line-height:1.5}
+ .welcome>.btn{width:100%}
+ .stats{gap:9px;margin-bottom:15px}
+ .stat{min-height:102px;padding:14px 12px;border-radius:14px}
+ .stat span{font-size:9px;letter-spacing:.7px}
+ .stat strong{font-size:25px;margin-top:8px}
+ .panel{padding:13px;border-radius:14px;margin-bottom:14px}
+ .panel-head{align-items:flex-start;flex-wrap:wrap}
+ .panel h3{font-size:14px}
+ table{min-width:640px}
+ th,td{padding:11px 10px;font-size:12px}
+ .modal{padding:0;align-items:flex-end}
+ .modal-card{width:100%;max-width:none;max-height:88svh;padding:18px 16px calc(18px + env(safe-area-inset-bottom));border-radius:20px 20px 0 0}
+ .modal-head h3{font-size:16px}
+ .field input,.field select,.field textarea{font-size:16px}
+ .btn{min-height:42px}
+}
+@media(max-width:370px){
+ .content{padding-left:9px;padding-right:9px}
+ .stat{padding:12px 9px}
+ .stat span{font-size:8px}
+ .stat strong{font-size:22px}
+ .topright .btn{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
 </style>
 </head>
 <body>
