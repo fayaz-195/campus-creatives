@@ -532,6 +532,22 @@ td b{color:#1c2c47;font-weight:700}
  #appView .topright .btn{font-size:10px;padding:8px}
 }
 
+
+@media print{
+ body{background:#fff!important;color:#111!important}
+ #loginView,.side,.top,.welcome>.btn,.panel-head>.btn,.actions button,.modal{display:none!important}
+ #appView.shell{display:block!important}
+ #appView .main{width:100%!important}
+ #appView .content{max-width:none!important;padding:0!important}
+ #appView .section{display:none!important}
+ #appView #reports.section.active{display:block!important}
+ #reports .panel,#reports .stat{box-shadow:none!important;border:1px solid #ddd!important;break-inside:avoid}
+ #reports .welcome{display:block!important}
+ #reports .welcome:before{content:"CAMPUS CREATIVES · We Create. Colleges Connect.";display:block;font-weight:800;margin-bottom:18px}
+ #reports .welcome h1{color:#07152e!important}
+ #reports .stats{grid-template-columns:repeat(4,1fr)!important}
+}
+
 </style>
 </head>
 <body>
@@ -571,6 +587,8 @@ td b{color:#1c2c47;font-weight:700}
  <div class="content">
  <section id="overview" class="section active"><div class="welcome"><div><h1>Good to see you.</h1><p>Here’s what’s happening across Campus Creatives.</p></div><button class="btn" onclick="showPage('enquiries')">View enquiries →</button></div>
  <div class="stats"><div class="stat"><span>Total enquiries</span><strong id="statEnquiries">—</strong></div><div class="stat"><span>New enquiries</span><strong id="statNew">—</strong></div><div class="stat"><span>Portfolio items</span><strong id="statPortfolio">—</strong></div><div class="stat"><span>Active projects</span><strong id="statProjects">—</strong></div></div>
+ <div class="stats" id="ccCommandStats"><div class="stat"><span>Campaign spend</span><strong id="ccCmdSpend">₹0</strong></div><div class="stat"><span>Campaign revenue</span><strong id="ccCmdRevenue">₹0</strong></div><div class="stat"><span>Pending approvals</span><strong id="ccCmdApprovals">0</strong></div><div class="stat"><span>Open team tasks</span><strong id="ccCmdTasks">0</strong></div></div>
+ <div class="panel"><div class="panel-head"><h3>Agency quick actions</h3></div><div class="actions"><button class="btn light" onclick="showPage('social')">Plan social content</button><button class="btn light" onclick="showPage('campaigns')">Track campaign ROI</button><button class="btn light" onclick="showPage('clientportal')">Manage client portal</button><button class="btn light" onclick="showPage('performance')">Team performance</button></div></div>
  <div class="panel"><div class="panel-head"><h3>Recent enquiries</h3><button class="btn light small" onclick="showPage('enquiries')">See all</button></div><div id="recentTable" class="table-wrap"><div class="empty">Loading enquiries…</div></div></div></section>
  <section id="enquiries" class="section"><div class="welcome"><div><h1>Enquiries</h1><p>Review and update incoming client requests.</p></div><button class="btn light" onclick="loadEnquiries()">↻ Refresh</button></div><div class="panel"><div id="enquiryTable" class="table-wrap"><div class="empty">Loading…</div></div></div></section>
  <section id="portfolio" class="section"><div class="welcome"><div><h1>Portfolio</h1><p>Manage work shown in your creative portfolio.</p></div><button class="btn" onclick="openModal('portfolioModal')">+ Add work</button></div><div class="panel"><div id="portfolioTable" class="table-wrap"><div class="empty">Loading…</div></div></div></section>
@@ -598,7 +616,7 @@ td b{color:#1c2c47;font-weight:700}
   <div class="panel"><div class="panel-head"><h3>Monthly schedule</h3><button class="btn light small" onclick="loadCalendar()">↻ Refresh</button></div><div id="ccCalendarList">Loading calendar…</div></div>
  </section>
  <section id="reports" class="section">
-  <div class="welcome"><div><h1>Business Reports</h1><p>Live summaries calculated from your enquiries, projects, invoices and expenses.</p></div><button class="btn light" onclick="loadReports()">↻ Refresh reports</button></div>
+  <div class="welcome"><div><h1>Business Reports</h1><p>Live summaries calculated from your enquiries, projects, invoices and expenses.</p></div><div class="actions"><button class="btn light" onclick="loadReports()">↻ Refresh reports</button><button class="btn" onclick="window.print()">Print / Save PDF</button></div></div>
   <div class="stats"><div class="stat"><span>Lead conversion</span><strong id="repConversion">0%</strong></div><div class="stat"><span>Active projects</span><strong id="repProjects">0</strong></div><div class="stat"><span>Collection rate</span><strong id="repCollection">0%</strong></div><div class="stat"><span>Net cash (all time)</span><strong id="repNet">₹0</strong></div></div>
   <div class="panel"><div class="panel-head"><h3>Last 6 months — collections vs expenses</h3></div><div id="ccReportChart"></div></div>
   <div class="panel"><div class="panel-head"><h3>Service & lead performance</h3></div><div id="ccReportDetails"></div></div>
