@@ -535,8 +535,18 @@ async function loadBrandProfiles(){
  if(error){msg('brandMsg',error.message);return}
  brandProfiles=data||[];
  $('brandSelect').innerHTML='<option value="">New brand profile</option>'+brandProfiles.map(b=>'<option value="'+b.id+'">'+esc(b.brand_name)+'</option>').join('');
- $('brandList').innerHTML=brandProfiles.length?'<div class="table-wrap">'+table(['Brand','Phone / Website',''],brandProfiles.map(b=>'<tr><td><b>'+esc(b.brand_name)+'</b></td><td>'+esc(b.phone||'—')+'<br>'+esc(b.website||'')+'</td><td><button class="btn light small" data-use-brand="'+b.id+'">Use</button></td></tr>'))+'</div>':'<div class="empty">No brand profiles saved yet.</div>';
+ $('brandList').innerHTML=brandProfiles.length?'<div class="table-wrap">'+table(['Brand','Phone / Website','Actions'],brandProfiles.map(b=>'<tr><td><b>'+esc(b.brand_name)+'</b></td><td>'+esc(b.phone||'—')+'<br>'+esc(b.website||'')+'</td><td><div class="actions"><button class="btn light small" data-use-brand="'+b.id+'">Use</button><button class="btn danger small" data-delete-brand="'+b.id+'">Delete</button></div></td></tr>'))+'</div>':'<div class="empty">No brand profiles saved yet.</div>';
  document.querySelectorAll('[data-use-brand]').forEach(btn=>btn.onclick=()=>{ $('brandSelect').value=btn.dataset.useBrand; $('brandSelect').dispatchEvent(new Event('change')); });
+ document.querySelectorAll('[data-delete-brand]').forEach(btn=>btn.onclick=async()=>{
+  const id=btn.dataset.deleteBrand;const brand=brandProfiles.find(x=>x.id===id);
+  if(!brand||!confirm('Delete the brand profile for "'+brand.brand_name+'"? This cannot be undone.'))return;
+  btn.disabled=true;msg('brandMsg','Deleting brand profile…');
+  const {error}=await sb.from('creative_brand_profiles').delete().eq('id',id);
+  if(error){msg('brandMsg','Could not delete brand profile: '+error.message);btn.disabled=false;return}
+  if($('brandSelect').value===id){$('brandSelect').value='';$('brandForm').reset();$('brandLogo').value='';}
+  msg('brandMsg','Brand profile deleted. Uploaded logo file remains in Asset Library.');
+  await loadBrandProfiles();
+ });
 }
 $('brandSelect').addEventListener('change',()=>{
  const b=brandProfiles.find(x=>x.id===$('brandSelect').value);const f=$('brandForm');f.reset();
