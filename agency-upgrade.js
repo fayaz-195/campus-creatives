@@ -8,8 +8,21 @@
  async function fillClientSelects(){
   const {data,error}=await sb.from('clients').select('id,name,institution').order('name');
   if(error){note('ccClientLinkMsg',error.message);return}
-  ['ccPortalClient','ccSocialClient','ccCampaignClient','ccProjectClient','ccInvoiceClient','ccApprovalClient','ccUpdateClient'].forEach(id=>{const el=$(id);if(!el)return;const empty=el.options[0]?.outerHTML||'<option value="">Select client</option>';el.innerHTML=empty+(data||[]).map(c=>'<option value="'+c.id+'">'+esc(c.name)+(c.institution?' · '+esc(c.institution):'')+'</option>').join('')});
+  ['ccPortalClient','ccSocialClient','ccCampaignClient','ccProjectClient','ccInvoiceClient','ccApprovalClient','ccUpdateClient','ccFolderClient'].forEach(id=>{const el=$(id);if(!el)return;const empty=el.options[0]?.outerHTML||'<option value="">Select client</option>';el.innerHTML=empty+(data||[]).map(c=>'<option value="'+c.id+'">'+esc(c.name)+(c.institution?' · '+esc(c.institution):'')+'</option>').join('')});
  }
+
+
+ async function loadAssetFolders(){
+  await fillClientSelects();
+  const {data,error}=await sb.from('cc_asset_folders').select('id,folder_name,client_id,clients(name)').order('folder_name');
+  if(error){note('ccFolderMsg',error.message);return}
+  const select=$('ccAssetFolder');if(select){const current=select.value;select.innerHTML='<option value="">Root / Unsorted</option>'+(data||[]).map(x=>'<option value="'+x.id+'">'+esc(x.folder_name)+(x.clients?.name?' · '+esc(x.clients.name):'')+'</option>').join('');if((data||[]).some(x=>x.id===current))select.value=current;}
+  const target=$('ccFolderTable');if(target)target.innerHTML=(data||[]).length?'<table><thead><tr><th>Folder</th><th>Client</th><th>Actions</th></tr></thead><tbody>'+(data||[]).map(x=>'<tr><td><b>'+esc(x.folder_name)+'</b></td><td>'+esc(x.clients?.name||'General')+'</td><td><button class="btn light small" data-folder-open="'+x.id+'">Open</button> <button class="btn danger small" data-folder-del="'+x.id+'">Delete</button></td></tr>').join('')+'</tbody></table>':'<div class="empty">Create folders to organize creative assets.</div>';
+  document.querySelectorAll('[data-folder-open]').forEach(b=>b.onclick=()=>{select.value=b.dataset.folderOpen;select.dispatchEvent(new Event('change'))});
+  document.querySelectorAll('[data-folder-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this folder record? Files stored inside will remain in storage.'))return;const {error}=await sb.from('cc_asset_folders').delete().eq('id',b.dataset.folderDel);if(error)alert(error.message);else loadAssetFolders()});
+ }
+ $('ccFolderForm')?.addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.target);if(!v.client_id)v.client_id=null;const {error}=await sb.from('cc_asset_folders').insert(v);if(error){note('ccFolderMsg',error.message);return}e.target.reset();note('ccFolderMsg','Folder created.');loadAssetFolders()});
+ $('ccAssetFolder')?.addEventListener('change',()=>{if(typeof loadAssets==='function')loadAssets()});
 
  async function loadCommandCenter(){
   const [c,a,t]=await Promise.all([sb.from('cc_campaigns').select('spend,attributed_revenue'),sb.from('client_approvals').select('id,status'),sb.from('admin_tasks').select('id,status')]);
@@ -80,5 +93,5 @@
  $('ccSocialForm')?.addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.target);['client_id','scheduled_at','asset_url','caption','hashtags','published_url'].forEach(k=>{if(!v[k])v[k]=null});if(v.scheduled_at)v.scheduled_at=new Date(v.scheduled_at).toISOString();const {error}=await sb.from('cc_social_posts').insert(v);if(error){note('ccSocialMsg',error.message);return}e.target.reset();note('ccSocialMsg','Content plan saved.');loadSocial()});
  $('ccCampaignForm')?.addEventListener('submit',async e=>{e.preventDefault();const v=formValues(e.target);['budget','spend','leads','conversions','attributed_revenue'].forEach(k=>v[k]=Number(v[k]||0));['client_id','objective','start_date','end_date','notes'].forEach(k=>{if(!v[k])v[k]=null});const {error}=await sb.from('cc_campaigns').insert(v);if(error){note('ccCampaignMsg',error.message);return}e.target.reset();note('ccCampaignMsg','Campaign saved.');loadCampaigns()});
  $('ccRefreshLinks')?.addEventListener('click',loadLinks);$('ccRefreshSocial')?.addEventListener('click',loadSocial);$('ccRefreshCampaigns')?.addEventListener('click',loadCampaigns);$('ccRefreshPerformance')?.addEventListener('click',loadPerformance);
- document.querySelectorAll('.navbtn[data-page]').forEach(b=>b.addEventListener('click',()=>{const p=b.dataset.page;if(p==='overview')loadCommandCenter();if(p==='clientportal'){loadLinks();loadClientUpdates();}if(p==='social')loadSocial();if(p==='campaigns')loadCampaigns();if(p==='performance')loadPerformance();if(['projects','invoices','approvals'].includes(p))fillClientSelects()}));
+ document.querySelectorAll('.navbtn[data-page]').forEach(b=>b.addEventListener('click',()=>{const p=b.dataset.page;if(p==='overview')loadCommandCenter();if(p==='uploads')loadAssetFolders();if(p==='clientportal'){loadLinks();loadClientUpdates();}if(p==='social')loadSocial();if(p==='campaigns')loadCampaigns();if(p==='performance')loadPerformance();if(['projects','invoices','approvals'].includes(p))fillClientSelects()}));
 })();
