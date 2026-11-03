@@ -23,6 +23,13 @@
   const text=brief.replace(/https?:\/\/\S+/g,' ').replace(/\s+/g,' ').trim();
   const year=(text.match(/20\d{2}\s*[-–]\s*\d{2,4}/)||[])[0]||'2026–27';
   let title='MAKE YOUR FUTURE HAPPEN',kicker='A NEW ACADEMIC JOURNEY';
+  if(/sri\\s*ram|rama\\s*navami/i.test(text)){title='SRI RAMA NAVAMI';kicker='MAY DHARMA AND PEACE GUIDE EVERY STEP';}
+  else if(/ugadi/i.test(text)){title='HAPPY UGADI';kicker='WISHING YOU A YEAR OF NEW BEGINNINGS';}
+  else if(/diwali|deepavali/i.test(text)){title='HAPPY DIWALI';kicker='MAY YOUR LIFE SHINE WITH JOY AND LIGHT';}
+  else if(/dussehra|vijayadashami/i.test(text)){title='HAPPY DUSSEHRA';kicker='CELEBRATING THE VICTORY OF GOOD';}
+  else if(/ganesh|vinayaka/i.test(text)){title='HAPPY GANESH CHATURTHI';kicker='MAY LORD GANESHA BLESS YOU';}
+  else if(/independence\\s*day/i.test(text)){title='HAPPY INDEPENDENCE DAY';kicker='CELEBRATING THE SPIRIT OF FREEDOM';}
+  else if(/teachers?\\s*day/i.test(text)){title='HAPPY TEACHERS’ DAY';kicker='HONOURING THOSE WHO INSPIRE';}
   if(/admission|admissions|enrol|enroll|join/i.test(text)){title='ADMISSIONS OPEN';kicker='ADMISSIONS '+year;}
   else if(/scholarship|talent test/i.test(text)){title='SCHOLARSHIP TEST';kicker='EXCEL WITH AGASTYA';}
   else if(/result|results/i.test(text)){title='CELEBRATING SUCCESS';kicker='STUDENT ACHIEVEMENTS';}
