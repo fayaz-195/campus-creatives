@@ -367,6 +367,19 @@ td b{color:#1c2c47;font-weight:700}
 @media(max-width:370px){.content{padding-left:8px;padding-right:8px}.stat{padding:12px 9px}.stat strong{font-size:22px}.stat span{font-size:7px}.topright .btn{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
+
+/* Mobile navigation: show every module without horizontal scrolling */
+@media(max-width:900px){
+ .side nav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;overflow:visible!important;padding:4px 0 2px;scroll-snap-type:none}
+ .navbtn{min-width:0;width:100%;justify-content:center;text-align:center;white-space:normal;min-height:38px;padding:7px 5px;font-size:10px;line-height:1.2}
+ .navbtn:hover{transform:none}
+}
+@media(max-width:560px){
+ .side{position:relative}
+ .side nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ .navbtn{font-size:9px;min-height:36px;padding:6px 3px;border-radius:8px}
+}
+
 </style>
 </head>
 <body>
