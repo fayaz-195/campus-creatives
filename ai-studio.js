@@ -9,7 +9,7 @@
  function say(text,who='assistant'){const d=document.createElement('div');d.className='cc-ai-message '+(who==='user'?'cc-ai-user':'cc-ai-assistant');d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;return d}
  function status(t){$('ccAiStatus').textContent=t}
  function brandData(){const list=typeof brandProfiles!=='undefined'?brandProfiles:[];return list.find(b=>b.id===$('brandSelect').value)||{}}
- function headline(s){let t=s.replace(/https?:\\/\\/\\S+/g,'').split(/[.!?\\n]/)[0].trim();t=t.replace(/^(please\\s+)?(create|make|design|generate|prepare)\\s+(a|an|the)?\\s*/i,'');return t.slice(0,64).toUpperCase()}
+ function headline(s){let t=s.replace(/https?:\/\/\S+/g,'').split(/[.!?\n]/)[0].trim();t=t.replace(/^(please\s+)?(create|make|design|generate|prepare)\s+(a|an|the)?\s*/i,'');return t.slice(0,64).toUpperCase()}
  async function composite(artBlob,brand,brief){
   const size=$('ccAiSize').value.split('x').map(Number),w=size[0],h=size[1],canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
   const ctx=canvas.getContext('2d'),artUrl=URL.createObjectURL(artBlob);
