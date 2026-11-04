@@ -173,13 +173,46 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 @media(max-width:560px){.trust{padding:25px 0 29px}.trust-item b{font-size:38px}.trust-item span{font-size:9px;letter-spacing:3px}.trust-item span:before,.trust-item span:after{width:20px;margin:0 8px}.showcase{height:390px;border-radius:18px}.showcase-logo{padding:18px}.showcase-logo img{width:min(330px,88%);max-height:255px}.showcase-tag{font-size:8px;letter-spacing:2px;bottom:25px}.about-copy .section-head h2{font-size:43px;letter-spacing:-2px}}
 @media(prefers-reduced-motion:reduce){.showcase-logo{animation:none}.showcase,.showcase-logo img,.chip{transition:none}}
 
+
+/* Consolidated navigation + active section state */
+.navlinks{align-items:center;gap:clamp(13px,1.7vw,25px)}
+.nav-link,.nav-drop-trigger{position:relative;display:inline-flex;align-items:center;gap:7px;padding:12px 0;border:0;background:transparent;color:#c6d2e6;font:800 11px 'DM Sans',Arial,sans-serif;letter-spacing:1px;white-space:nowrap;cursor:pointer;transition:color .2s}
+.nav-link:after,.nav-drop-trigger:after{content:"";position:absolute;left:0;right:100%;bottom:4px;height:2px;background:var(--yellow);transition:right .25s}
+.nav-link:hover,.nav-drop-trigger:hover,.nav-link.active,.nav-drop-trigger.active{color:var(--yellow)}
+.nav-link:hover:after,.nav-link.active:after,.nav-drop-trigger:hover:after,.nav-drop-trigger.active:after{right:0}
+.nav-dropdown{position:relative}
+.nav-drop-trigger span{font-size:15px;line-height:1;transition:transform .2s}
+.nav-dropdown.open .nav-drop-trigger span{transform:rotate(180deg)}
+.nav-drop-menu{display:none;position:absolute;top:calc(100% + 8px);left:-16px;min-width:190px;padding:8px;background:#0a2147;border:1px solid #ffffff24;border-radius:9px;box-shadow:0 18px 38px #0008;z-index:60}
+.nav-dropdown:hover .nav-drop-menu,.nav-dropdown:focus-within .nav-drop-menu,.nav-dropdown.open .nav-drop-menu{display:block}
+.nav-drop-menu a{display:block;padding:11px 12px;border-radius:5px;color:#c6d2e6;font-size:11px;font-weight:700;letter-spacing:.5px;transition:background .2s,color .2s}
+.nav-drop-menu a:hover,.nav-drop-menu a.active{background:#ffffff10;color:var(--yellow)}
+@media(max-width:900px){
+ .navlinks{align-items:stretch}
+ .nav-dropdown{width:100%}
+ .nav-drop-trigger{width:100%;justify-content:space-between;padding:13px 5px;border-bottom:1px solid #ffffff12}
+ .nav-drop-menu{position:static;min-width:0;padding:4px 0 8px 12px;border:0;border-radius:0;background:transparent;box-shadow:none}
+ .nav-dropdown.open .nav-drop-menu{display:block}
+ .nav-drop-menu a{padding:11px 10px}
+ .nav-dropdown:hover .nav-drop-menu{display:none}
+ .nav-dropdown.open:hover .nav-drop-menu{display:block}
+ .nav-dropdown:focus-within .nav-drop-menu{display:block}
+}
+
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"Campus Creatives","url":"https://campus-creatives.pages.dev/","logo":"https://campus-creatives.pages.dev/campus-creatives-logo.webp","description":"Creative branding, graphic design, printing and digital marketing for educational institutions.","telephone":"+91-8919572195","areaServed":{"@type":"Country","name":"India"},"sameAs":[]}
 </script>
 </head>
 <body>
-<header><div class="wrap nav"><a class="brand" href="#"><img src="campus-creatives-logo.webp" alt="Campus Creatives original logo"><span class="brand-word">CAMPUS <span class="yellow">CREATIVES</span><small>WE CREATE. COLLEGES CONNECT.</small></span></a><nav class="navlinks" id="primaryNav"><a href="#">HOME</a><a href="#about">ABOUT</a><a href="#services">SERVICES</a><a href="#works">WORKS</a><a href="#clients">PARTNERS</a><a href="#process">PROCESS</a><a href="#insights">INSIGHTS</a><a href="#contact">CONTACT</a></nav><a class="phone-link" href="tel:+918919572195">8919572195</a><a class="btn" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">LET'S TALK ↗</a><button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primaryNav">☰</button></div></header>
+<header><div class="wrap nav"><a class="brand" href="#"><img src="campus-creatives-logo.webp" alt="Campus Creatives original logo"><span class="brand-word">CAMPUS <span class="yellow">CREATIVES</span><small>WE CREATE. COLLEGES CONNECT.</small></span></a><nav class="navlinks" id="primaryNav" aria-label="Main navigation">
+<a class="nav-link active" href="#" data-section="home">HOME</a>
+<div class="nav-dropdown"><button class="nav-drop-trigger" type="button" aria-expanded="false">ABOUT <span>⌄</span></button><div class="nav-drop-menu"><a href="#about" data-section="about">Who We Are</a><a href="#clients" data-section="clients">Our Partners</a></div></div>
+<div class="nav-dropdown"><button class="nav-drop-trigger" type="button" aria-expanded="false">SERVICES <span>⌄</span></button><div class="nav-drop-menu"><a href="#services" data-section="services">What We Do</a><a href="#process" data-section="process">Our Process</a></div></div>
+<div class="nav-dropdown"><button class="nav-drop-trigger" type="button" aria-expanded="false">PORTFOLIO <span>⌄</span></button><div class="nav-drop-menu"><a href="#works" data-section="works">Creative Works</a><a href="#case-studies" data-section="case-studies">Client Stories</a></div></div>
+<div class="nav-dropdown"><button class="nav-drop-trigger" type="button" aria-expanded="false">RESOURCES <span>⌄</span></button><div class="nav-drop-menu"><a href="#insights" data-section="insights">Insights</a><a href="#faq" data-section="faq">FAQs</a></div></div>
+<a class="nav-link" href="#contact" data-section="contact">CONTACT</a>
+</nav><a class="phone-link" href="tel:+918919572195">8919572195</a><a class="btn" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">LET'S TALK ↗</a><button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primaryNav">☰</button></div></header>
 <main>
 <section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">YOUR EDUCATION BRANDING PARTNER</div><h1>WE CREATE.<span>COLLEGES CONNECT.</span></h1><p class="hero-copy">We turn ideas into unforgettable campus experiences. From premium print design to digital campaigns, branding and visual storytelling — we help educational institutions stand out.</p><div class="hero-actions"><a class="btn" href="#services">EXPLORE OUR WORK ↓</a><a class="btn ghost" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">START A PROJECT ↗</a></div><div class="micro-note">DESIGN <b>•</b> PRINT <b>•</b> DIGITAL <b>•</b> BRANDING</div></div>
 <div class="artboard" aria-label="Animated creative design artwork"><div class="art-glow"></div><div class="orbit"></div><div class="orbit two"></div><div class="spark s1">✦</div><div class="spark s2">✧</div><div class="creative-card poster-float"><img id="heroPoster" src="campus-creatives-poster.webp.png" alt="Campus Creatives digital marketing solutions poster"></div><div class="float-tile tile-a"><strong>360°</strong><small>CREATIVE SOLUTIONS</small></div><div class="float-tile tile-b"><strong>IDEA → IMPACT</strong><small>WE BRING BRANDS TO LIFE</small></div></div></div></section>
@@ -397,6 +430,54 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
    info.append(meta,h,p,link);card.append(art,info);grid.prepend(card);
   });
  }catch(e){console.warn('Portfolio feed unavailable',e)}
+})();
+</script>
+
+
+<script>
+(()=> {
+ const nav=document.getElementById('primaryNav');
+ if(!nav)return;
+ const links=[...nav.querySelectorAll('a[data-section]')];
+ const groups=[...nav.querySelectorAll('.nav-dropdown')];
+ const closeMenus=()=>groups.forEach(g=>{g.classList.remove('open');g.querySelector('.nav-drop-trigger')?.setAttribute('aria-expanded','false')});
+ groups.forEach(group=>{
+  const trigger=group.querySelector('.nav-drop-trigger');
+  trigger.addEventListener('click',()=>{
+   const shouldOpen=!group.classList.contains('open');
+   closeMenus();
+   if(shouldOpen){group.classList.add('open');trigger.setAttribute('aria-expanded','true')}
+  });
+ });
+ const setActive=id=>{
+  links.forEach(a=>a.classList.toggle('active',a.dataset.section===id));
+  groups.forEach(g=>{
+   const contains=[...g.querySelectorAll('a[data-section]')].some(a=>a.dataset.section===id);
+   g.querySelector('.nav-drop-trigger')?.classList.toggle('active',contains);
+  });
+ };
+ links.forEach(a=>a.addEventListener('click',()=>{
+  setActive(a.dataset.section);
+  closeMenus();
+  const mobileNav=nav.classList.contains('open');
+  if(mobileNav){
+   nav.classList.remove('open');
+   const toggle=document.querySelector('.nav-toggle');
+   if(toggle){toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open navigation');toggle.textContent='☰'}
+  }
+ }));
+ document.addEventListener('click',e=>{if(!nav.contains(e.target))closeMenus()});
+ const sections=[...new Set(links.map(a=>a.dataset.section).filter(id=>id!=='home'))]
+  .map(id=>document.getElementById(id)).filter(Boolean);
+ if('IntersectionObserver'in window){
+  const observer=new IntersectionObserver(entries=>{
+   const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+   if(visible)setActive(visible.target.id);
+  },{rootMargin:'-25% 0px -60% 0px',threshold:[0,.1,.25,.5]});
+  sections.forEach(section=>observer.observe(section));
+ }
+ const updateHome=()=>{if(scrollY<180)setActive('home')};
+ addEventListener('scroll',updateHome,{passive:true});updateHome();
 })();
 </script>
 
