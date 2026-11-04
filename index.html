@@ -313,7 +313,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 (()=>{
  const poster=document.getElementById('heroPoster');
  if(poster){
-  fetch('./poster.json?v='+Date.now()).then(r=>{if(!r.ok)throw Error('No poster manifest');return r.json();})
+  fetch('./poster.json').then(r=>{if(!r.ok)throw Error('No poster manifest');return r.json();})
    .then(data=>{if(data&&data.image){poster.src=data.image;poster.alt=data.alt||'Campus Creatives poster';}})
    .catch(()=>{});
  }
