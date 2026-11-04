@@ -552,17 +552,27 @@ td b{color:#1c2c47;font-weight:700}
 /* Client-wise white-label report print layout */
 .report-brand-header{display:flex;align-items:center;gap:16px;padding:18px 20px;border-left:5px solid var(--report-accent,#f5c400);background:linear-gradient(110deg,var(--report-primary,#07152e),#18345e);color:#fff;border-radius:12px;margin:14px 0}.report-brand-header img{width:68px;height:68px;object-fit:contain;background:#fff;border-radius:9px;padding:5px}.report-brand-header div{display:grid;gap:5px}.report-brand-header b{font:800 20px Manrope}.report-brand-header span,.report-brand-header small{font-size:12px;opacity:.85}.report-controls{margin-bottom:18px}.report-controls .field{margin:4px 0}.report-controls .muted{font-size:12px;color:#718096}
 @media print{body.report-client-print #reports .report-controls{border:0!important;padding:0!important}.report-brand-header{print-color-adjust:exact;-webkit-print-color-adjust:exact}.report-controls .field{display:none!important}#reports .welcome{display:block!important}#reports .welcome:before{display:none!important}#reports .report-brand-header{break-inside:avoid}#reports .stats,#reports .panel{break-inside:avoid}}
+
+/* Official Campus Creatives logo in Admin Console */
+.brand-logo{display:block;width:100%;height:76px;max-width:280px;object-fit:contain;object-position:left center;flex:0 0 auto}
+.login-card .brand{justify-content:center;margin-bottom:28px}
+.login-card .brand-logo{max-width:300px;height:86px;object-position:center}
+.side .brand{justify-content:flex-start;margin:0 7px 8px}
+.side .brand-logo{max-width:215px;height:62px;object-position:left center}
+@media(max-width:900px){.side .brand-logo{max-width:205px;height:52px}}
+@media(max-width:560px){.login-card .brand-logo{max-width:260px;height:76px}.side .brand-logo{max-width:190px;height:46px}}
+
 </style>
 </head>
 <body>
 <div id="loginView" class="login-wrap"><div class="login-card">
- <div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN CONSOLE</small></div></div>
+ <div class="brand"><img class="brand-logo" src="https://campus-creatives.pages.dev/campus-creatives-logo.webp" alt="Campus Creatives — We Create. Colleges Connect."></div>
  <div class="eyebrow">Secure workspace</div><h1>Welcome back.</h1><p class="sub">Sign in with your approved administrator account to manage your studio.</p>
  <div class="field"><label>Administrator PIN</label><input id="adminPin" type="password" inputmode="text" autocomplete="current-password" minlength="12" placeholder="Enter your secure PIN" required></div><button class="btn full" id="pinLoginBtn" type="button">Unlock Admin Console</button>
  <div id="loginMsg" class="msg"></div><div class="notice">Private administrator access. Your PIN is verified securely by Supabase Authentication and is never stored in this page.</div>
 </div></div>
 <div id="appView" class="shell hidden">
- <aside class="side"><div class="brand"><div class="brand-mark">CC</div><div><b>CAMPUS CREATIVES</b><small>ADMIN WORKSPACE</small></div></div>
+ <aside class="side"><div class="brand"><img class="brand-logo" src="https://campus-creatives.pages.dev/campus-creatives-logo.webp" alt="Campus Creatives — We Create. Colleges Connect."></div>
  <nav id="mobileAdminNav">
 <button class="navbtn active" data-page="overview">◫ &nbsp; Overview</button>
 <div class="nav-group" data-nav-group="sales">
