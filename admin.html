@@ -840,12 +840,19 @@ async function loadInvoices(){
 async function loadApprovals(){const {data,error}=await sb.from('client_approvals').select('*').order('created_at',{ascending:false});if(error){$('approvalsTable').textContent=error.message;return}$('approvalsTable').innerHTML=table(['Preview','Client / Project','Status','Feedback'],data.map(x=>'<tr><td><a href="'+esc(x.preview_url)+'" target="_blank" rel="noopener">Open preview ↗</a></td><td><b>'+esc(x.client_name)+'</b><br>'+esc(x.project_name)+'</td><td><select class="statusSel" data-approval-status="'+x.id+'">'+['Pending','Approved','Changes Requested'].map(v=>'<option '+(v===x.status?'selected':'')+'>'+v+'</option>').join('')+'</select></td><td>'+esc(x.feedback||'—')+'</td></tr>'));document.querySelectorAll('[data-approval-status]').forEach(el=>el.onchange=async()=>{const {error}=await sb.from('client_approvals').update({status:el.value}).eq('id',el.dataset.approvalStatus);if(error)alert(error.message)})}
 $('clientForm').addEventListener('submit',async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target));const {error}=await sb.from('clients').insert(v);if(error){msg('clientMsg',error.message);return}closeModal('clientModal');e.target.reset();loadClients()});
 $('taskForm').addEventListener('submit',async e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target));if(!v.due_date)v.due_date=null;if(!v.assigned_member_id)v.assigned_member_id=null;const {error}=await sb.from('admin_tasks').insert(v);if(error){msg('taskMsg',error.message);return}closeModal('taskModal');e.target.reset();loadTasks()});
-function openInvoiceModal(){
+async function openInvoiceModal(){
  const f=$('invoiceForm');f.reset();
  const suffix=String(Date.now()).slice(-5),year=new Date().getFullYear();
  f.elements.document_type.value='quotation';f.elements.invoice_number.value='CC-QT-'+year+'-'+suffix;
- f.elements.contact_phone.value='8317528443';openModal('invoiceModal');
+ f.elements.contact_phone.value='8317528443';
+ const {data,error}=await sb.from('clients').select('id,name,institution').order('name');
+ if(!error)$('ccInvoiceClient').innerHTML='<option value="">Not linked</option>'+(data||[]).map(c=>'<option value="'+c.id+'">'+esc(c.institution||c.name)+'</option>').join('');
+ openModal('invoiceModal');
 }
+$('invoiceDocType').addEventListener('change',e=>{
+ const f=$('invoiceForm'),current=f.elements.invoice_number.value||'',year=new Date().getFullYear(),suffix=String(Date.now()).slice(-5);
+ if(current.startsWith('CC-QT-')||current.startsWith('CC-INV-'))f.elements.invoice_number.value=(e.target.value==='quotation'?'CC-QT-':'CC-INV-')+year+'-'+suffix;
+});
 $('loadWebsiteSample').addEventListener('click',()=>{
  const f=$('invoiceForm');f.elements.document_type.value='quotation';f.elements.invoice_number.value='CC-QT-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-5);
  f.elements.client_name.value='Jagan Sir’s Narayana Academy';
