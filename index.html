@@ -378,7 +378,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 (async()=>{
  try{
   const client=window.supabase.createClient('https://tlykwqcjctfoxjxsbhbn.supabase.co','sb_publishable_54H3R8sJDAHjZab2xJiQzQ_xs-qrvRs');
-  const {data,error}=await client.from('portfolio_items').select('id,title,client,category,image_url,description').order('created_at',{ascending:false});
+  const {data,error}=await client.from('portfolio_items').select('id,title,client,category,image_url,description,website_url,is_published').eq('is_published',true).order('created_at',{ascending:false});
   if(error||!data||!data.length)return;
   const grid=document.querySelector('.portfolio-grid');if(!grid)return;
   data.forEach(item=>{
@@ -394,7 +394,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
    meta.append(type,clientTag);
    const h=document.createElement('h3');h.textContent=item.title||'Creative Work';
    const p=document.createElement('p');p.textContent=item.description||'Creative work by Campus Creatives.';
-   const link=document.createElement('a');link.className='work-view';link.href=item.image_url;link.target='_blank';link.rel='noopener';link.textContent='VIEW IMAGE ↗';
+   const link=document.createElement('a');link.className='work-view';link.href=item.website_url||item.image_url||'#';link.target='_blank';link.rel='noopener';link.textContent=item.website_url?'VIEW LIVE WEBSITE ↗':'VIEW IMAGE ↗';if(!item.website_url&&!item.image_url)link.hidden=true;
    info.append(meta,h,p,link);card.append(art,info);grid.prepend(card);
   });
  }catch(e){console.warn('Portfolio feed unavailable',e)}
