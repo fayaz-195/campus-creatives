@@ -203,12 +203,31 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 .catalogue-panel{display:grid;grid-template-columns:.75fr 1.25fr;gap:26px;padding:clamp(20px,4vw,42px);border:1px solid #29476f;border-radius:16px;background:linear-gradient(135deg,#0c2346,#08182f);box-shadow:0 24px 55px #0003}
 .catalogue-copy{align-self:center}.catalogue-mark{width:58px;height:58px;display:grid;place-items:center;border:2px solid var(--yellow);border-radius:14px;color:var(--yellow);font:900 25px Manrope;margin-bottom:22px}.catalogue-label{color:var(--yellow);font-size:10px;font-weight:900;letter-spacing:2px}.catalogue-copy h3{font:900 clamp(26px,3vw,38px)/1.1 Manrope;margin:13px 0}.catalogue-copy p{color:#b9c7dc;line-height:1.8;font-size:14px}.catalogue-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.catalogue-preview{min-height:480px;border:1px solid #ffffff24;border-radius:10px;overflow:hidden;background:#fff}.catalogue-preview iframe{display:block;width:100%;height:560px;border:0;background:white}
 @media(max-width:800px){.catalogue-panel{grid-template-columns:1fr}.catalogue-preview{min-height:380px}.catalogue-preview iframe{height:440px}}
-\n</style>
+\n
+.skip-link{position:fixed;z-index:200;top:10px;left:10px;padding:12px 16px;background:var(--yellow);color:#07152e;font-weight:900;border-radius:6px;transform:translateY(-160%);transition:transform .2s}
+.skip-link:focus{transform:translateY(0)}
+@media(max-width:850px){
+ .navlinks .nav-dropdown{width:100%}
+ .navlinks .nav-drop-trigger{width:100%;text-align:left;padding:13px 5px;border:0;border-bottom:1px solid #ffffff12;background:transparent;color:#c6d2e6;font:700 12px 'DM Sans';letter-spacing:1px;cursor:pointer}
+ .navlinks .nav-drop-menu{position:static;display:none;width:100%;padding:0 0 6px 14px;background:transparent;border:0;box-shadow:none}
+ .navlinks .nav-dropdown.open .nav-drop-menu{display:block}
+ .navlinks .nav-drop-menu a{padding:10px 5px;font-size:11px}
+}
+</style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"Campus Creatives","url":"https://campus-creatives.pages.dev/","logo":"https://campus-creatives.pages.dev/campus-creatives-logo.webp","description":"Creative branding, graphic design, printing and digital marketing for educational institutions.","telephone":"+91-8919572195","areaServed":{"@type":"Country","name":"India"},"sameAs":[]}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What services does Campus Creatives offer?","acceptedAnswer":{"@type":"Answer","text":"Graphic design and printing, digital marketing, reels and video production, photography, campus branding, event promotions, websites and institution essentials."}},
+{"@type":"Question","name":"Can we request a complete admission campaign?","acceptedAnswer":{"@type":"Answer","text":"Yes. Share your admission goals, course details, audience and timeline to discuss a coordinated set of print and digital creatives."}},
+{"@type":"Question","name":"Do you work with schools and junior colleges?","acceptedAnswer":{"@type":"Answer","text":"Campus Creatives focuses on educational institutions, including schools, junior colleges and campus brands."}},
+{"@type":"Question","name":"How do we get a quotation?","acceptedAnswer":{"@type":"Answer","text":"Send your institution name, required services, scope and target date through the enquiry form. The details will open in WhatsApp for you to review and send."}}
+]}
+</script>
 </head>
 <body>
+<a class="skip-link" href="#mainContent">Skip to content</a>
 <header><div class="wrap nav"><a class="brand" href="#"><img src="campus-creatives-logo.webp" alt="Campus Creatives original logo"><span class="brand-word">CAMPUS <span class="yellow">CREATIVES</span><small>WE CREATE. COLLEGES CONNECT.</small></span></a><nav class="navlinks" id="primaryNav" aria-label="Main navigation">
 <a class="nav-link active" href="#" data-section="home">HOME</a>
 <div class="nav-dropdown"><button class="nav-drop-trigger" type="button" aria-expanded="false">ABOUT <span>⌄</span></button><div class="nav-drop-menu"><a href="#about" data-section="about">Who We Are</a><a href="#clients" data-section="clients">Our Partners</a></div></div>
@@ -217,7 +236,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 <div class="nav-dropdown"><button class="nav-drop-trigger" type="button" aria-expanded="false">RESOURCES <span>⌄</span></button><div class="nav-drop-menu"><a href="#insights" data-section="insights">Insights</a><a href="#faq" data-section="faq">FAQs</a></div></div>
 <a class="nav-link" href="#contact" data-section="contact">CONTACT</a>
 </nav><a class="phone-link" href="tel:+918919572195">8919572195</a><a class="btn" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">LET'S TALK ↗</a><button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primaryNav">☰</button></div></header>
-<main>
+<main id="mainContent">
 <section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow">YOUR EDUCATION BRANDING PARTNER</div><h1>WE CREATE.<span>COLLEGES CONNECT.</span></h1><p class="hero-copy">We turn ideas into unforgettable campus experiences. From premium print design to digital campaigns, branding and visual storytelling — we help educational institutions stand out.</p><div class="hero-actions"><a class="btn" href="#services">EXPLORE OUR WORK ↓</a><a class="btn ghost" href="https://wa.me/918919572195?text=Hello%20Campus%20Creatives">START A PROJECT ↗</a></div><div class="micro-note">DESIGN <b>•</b> PRINT <b>•</b> DIGITAL <b>•</b> BRANDING</div></div>
 <div class="artboard" aria-label="Animated creative design artwork"><div class="art-glow"></div><div class="orbit"></div><div class="orbit two"></div><div class="spark s1">✦</div><div class="spark s2">✧</div><div class="creative-card poster-float"><img id="heroPoster" src="campus-creatives-poster.webp.png" alt="Campus Creatives digital marketing solutions poster"></div><div class="float-tile tile-a"><strong>360°</strong><small>CREATIVE SOLUTIONS</small></div><div class="float-tile tile-b"><strong>IDEA → IMPACT</strong><small>WE BRING BRANDS TO LIFE</small></div></div></div></section>
 <div class="trust"><div class="wrap trust-row"><div class="trust-item"><b>360°</b><span>Creative solutions</span></div><div class="trust-item"><b>ONE PARTNER</b><span>From idea to execution</span></div><div class="trust-item"><b>EDUCATION</b><span>Our creative focus</span></div></div></div>
