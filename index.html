@@ -472,6 +472,8 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
    const titleKey=(item.title||'').trim().toLowerCase();
    const clientKey=(item.client||'').trim().toLowerCase();
    if(titleKey.includes('the nano')||titleKey.includes('agastya')||clientKey.includes('the nano')||clientKey.includes('agastya'))return;
+   const combinedKey=(titleKey+' '+clientKey).replace(/[’‘`]/g,"'").replace(/[^a-z0-9]+/g,' ').trim();
+   if(combinedKey.includes('jagan')&&combinedKey.includes('narayana academy'))return;
    if([...grid.querySelectorAll('.work-card h3')].some(h=>h.textContent.trim().toLowerCase()===titleKey))return;
    if(!item.image_url&&!item.website_url)return;
    const card=document.createElement('article');card.className='work-card';card.dataset.category=(item.category||'digital').toLowerCase().includes('print')?'print':(item.category||'').toLowerCase().includes('brand')?'branding':(item.category||'').toLowerCase().includes('event')?'events':(item.category||'').toLowerCase().includes('web')?'web':'digital';
