@@ -469,6 +469,15 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   if(error||!data||!data.length)return;
   const grid=document.querySelector('.portfolio-grid');if(!grid)return;
   const websiteHrefForEmbed=raw=>{const value=String(raw||'').trim();const lower=value.toLowerCase();return lower.startsWith('http://')||lower.startsWith('https://')?value:'https://'+value.replace(/^\\/+/, '')};
+  data.forEach(item=>{
+   const titleKey=(item.title||'').trim().toLowerCase(),clientKey=(item.client||'').trim().toLowerCase();
+   if(titleKey.includes('the nano')||titleKey.includes('agastya')||clientKey.includes('the nano')||clientKey.includes('agastya'))return;
+   if([...grid.querySelectorAll('.work-card h3')].some(h=>h.textContent.trim().toLowerCase()===titleKey))return;
+   if(!item.image_url&&!item.website_url)return;
+   const card=document.createElement('article');card.className='work-card';
+   const category=(item.category||'digital').toLowerCase();
+   card.dataset.category=category.includes('print')?'print':category.includes('brand')?'branding':category.includes('event')?'events':category.includes('web')?'web':'digital';
+   const art=document.createElement('div');art.className='work-art';art.style.background='#0b2144';art.style.padding='0';
    if(item.website_url){
     const img=document.createElement('img');
     img.src='https://s.wordpress.com/mshots/v1/'+encodeURIComponent(websiteHrefForEmbed(item.website_url))+'?w=1200';
