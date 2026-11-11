@@ -565,7 +565,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   first.style.marginRight='100vw';
   track.replaceChildren(first,second);
   track.style.cssText='display:flex;align-items:center;width:max-content;gap:0;animation:ccLogoScroll 4s linear infinite';
-  const width=first.getBoundingClientRect().width;
+  const width=first.getBoundingClientRect().width+window.innerWidth;
   track.style.setProperty('--cc-logo-distance',width+'px');
   if(!document.getElementById('ccLogoScrollKeyframes')){
    const css=document.createElement('style');css.id='ccLogoScrollKeyframes';css.textContent='@keyframes ccLogoScroll{from{transform:translateX(0)}to{transform:translateX(calc(-1 * var(--cc-logo-distance)))}}';document.head.append(css);
