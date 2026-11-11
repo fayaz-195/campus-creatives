@@ -553,7 +553,9 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   const makeChip=item=>{
    const chip=document.createElement('div');chip.className='logo-chip';
    const logo=document.createElement('img');logo.src=item.logo_url;logo.alt=item.display_name+' logo';logo.loading='lazy';logo.style.cssText='width:54px;height:48px;object-fit:contain;flex:none;background:#fff;border-radius:7px;padding:4px';
-   const label=document.createElement('span');const name=document.createElement('b');name.textContent=item.display_name;const sub=document.createElement('small');sub.textContent=item.institution||'CLIENT PARTNER';label.append(name,sub);chip.append(logo,label);return chip;
+   chip.style.cssText='height:82px;min-width:170px;justify-content:center;padding:12px 22px';
+   logo.style.cssText='width:100%;height:58px;max-width:150px;object-fit:contain;flex:none;background:transparent;border-radius:0;padding:0';
+   chip.append(logo);return chip;
   };
   data.forEach(item=>track.append(makeChip(item)));
   if(data.length>1)data.forEach(item=>track.append(makeChip(item)));
