@@ -558,8 +558,8 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
    chip.append(logo);return chip;
   };
   data.forEach(item=>track.append(makeChip(item)));
-  if(data.length>1)data.forEach(item=>track.append(makeChip(item)));
-  else track.style.animation='none';
+  data.forEach(item=>track.append(makeChip(item)));
+  track.style.animation='clientLogoScroll 28s linear infinite';
  }catch(e){console.warn('Client logos unavailable',e)}
 })();
 </script>
