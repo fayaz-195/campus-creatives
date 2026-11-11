@@ -541,4 +541,25 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
 })();
 </script>
 
+
+<script>
+(async()=>{
+ try{
+  const sb=window.supabase.createClient('https://tlykwqcjctfoxjxsbhbn.supabase.co','sb_publishable_54H3R8sJDAHjZab2xJiQzQ_xs-qrvRs');
+  const {data,error}=await sb.from('client_showcase').select('display_name,institution,logo_url').eq('is_visible',true).not('logo_url','is',null).order('created_at',{ascending:true});
+  if(error||!data||!data.length)return;
+  const track=document.querySelector('.client-strip .logo-track');if(!track)return;
+  track.replaceChildren();
+  const makeChip=item=>{
+   const chip=document.createElement('div');chip.className='logo-chip';
+   const logo=document.createElement('img');logo.src=item.logo_url;logo.alt=item.display_name+' logo';logo.loading='lazy';logo.style.cssText='width:54px;height:48px;object-fit:contain;flex:none;background:#fff;border-radius:7px;padding:4px';
+   const label=document.createElement('span');const name=document.createElement('b');name.textContent=item.display_name;const sub=document.createElement('small');sub.textContent=item.institution||'CLIENT PARTNER';label.append(name,sub);chip.append(logo,label);return chip;
+  };
+  data.forEach(item=>track.append(makeChip(item)));
+  if(data.length>1)data.forEach(item=>track.append(makeChip(item)));
+  else track.style.animation='none';
+ }catch(e){console.warn('Client logos unavailable',e)}
+})();
+</script>
+
 </body></html>
