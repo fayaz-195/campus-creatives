@@ -562,9 +562,10 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   const first=document.createElement('div');first.style.cssText='display:flex;align-items:center;gap:18px;flex:none';
   data.forEach(item=>first.append(makeLogo(item)));
   const second=first.cloneNode(true);second.setAttribute('aria-hidden','true');
+  first.style.marginRight='100vw';
   track.replaceChildren(first,second);
-  track.style.cssText='display:flex;align-items:center;width:max-content;gap:28px;animation:ccLogoScroll 9s linear infinite';
-  const width=first.getBoundingClientRect().width+28;
+  track.style.cssText='display:flex;align-items:center;width:max-content;gap:0;animation:ccLogoScroll 9s linear infinite';
+  const width=first.getBoundingClientRect().width;
   track.style.setProperty('--cc-logo-distance',width+'px');
   if(!document.getElementById('ccLogoScrollKeyframes')){
    const css=document.createElement('style');css.id='ccLogoScrollKeyframes';css.textContent='@keyframes ccLogoScroll{from{transform:translateX(0)}to{transform:translateX(calc(-1 * var(--cc-logo-distance)))}}';document.head.append(css);
