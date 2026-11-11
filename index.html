@@ -484,7 +484,9 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
    meta.append(type,clientTag);
    const h=document.createElement('h3');h.textContent=item.title||'Creative Work';
    const p=document.createElement('p');p.textContent=item.description||'Creative work by Campus Creatives.';
-   const link=document.createElement('a');link.className='work-view';link.href=item.website_url||item.image_url||'#';link.target='_blank';link.rel='noopener';link.textContent=item.website_url?'VIEW LIVE WEBSITE ↗':'VIEW IMAGE ↗';if(!item.website_url&&!item.image_url)link.hidden=true;
+   const rawWebsite=(item.website_url||'').trim();
+   const websiteHref=rawWebsite?( /^https?:\/\//i.test(rawWebsite)?rawWebsite:'https://'+rawWebsite.replace(/^\/+/,'')):'';
+   const link=document.createElement('a');link.className='work-view';link.href=websiteHref||item.image_url||'#';link.target='_blank';link.rel='noopener noreferrer';link.textContent=websiteHref?'VISIT LIVE WEBSITE ↗':'VIEW IMAGE ↗';if(!websiteHref&&!item.image_url)link.hidden=true;
    info.append(meta,h,p,link);card.append(art,info);grid.prepend(card);
   });
  }catch(e){console.warn('Portfolio feed unavailable',e)}
