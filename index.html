@@ -468,6 +468,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   const {data,error}=await client.from('portfolio_items').select('id,title,client,category,image_url,description,website_url,is_published').eq('is_published',true).order('created_at',{ascending:false});
   if(error||!data||!data.length)return;
   const grid=document.querySelector('.portfolio-grid');if(!grid)return;
+  const websiteHrefForEmbed=raw=>{const value=String(raw||'').trim();return /^https?:\\/\\//i.test(value)?value:'https://'+value.replace(/^\\/+/, '')};
   data.forEach(item=>{
    const titleKey=(item.title||'').trim().toLowerCase();
    const clientKey=(item.client||'').trim().toLowerCase();
@@ -476,7 +477,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
    if(!item.image_url&&!item.website_url)return;
    const card=document.createElement('article');card.className='work-card';card.dataset.category=(item.category||'digital').toLowerCase().includes('print')?'print':(item.category||'').toLowerCase().includes('brand')?'branding':(item.category||'').toLowerCase().includes('event')?'events':(item.category||'').toLowerCase().includes('web')?'web':'digital';
    const art=document.createElement('div');art.className='work-art';art.style.background='#0b2144';art.style.padding='0';
-   if(item.image_url||item.website_url){const img=document.createElement('img');const previewUrl=item.website_url?'https://s.wordpress.com/mshots/v1/'+encodeURIComponent(item.website_url)+'?w=1200':item.image_url;img.src=item.image_url||previewUrl;img.alt=(item.title||'Client')+' website preview';img.loading='lazy';img.style.cssText='width:100%;height:100%;min-height:225px;max-height:340px;object-fit:cover;object-position:top center;display:block;background:#091a34';img.onerror=()=>{if(!item.image_url){img.remove();const fallback=document.createElement('div');fallback.textContent='WEBSITE PREVIEW';fallback.style.cssText='color:#ffd329;font:800 16px Manrope;letter-spacing:2px';art.append(fallback)}};art.append(img)}
+   if(item.website_url){const frame=document.createElement('iframe');frame.src=websiteHrefForEmbed(item.website_url);frame.title=(item.title||'Client')+' live website';frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';frame.style.cssText='display:block;width:100%;height:225px;border:0;background:#fff;';art.append(frame)}else if(item.image_url){const img=document.createElement('img');img.src=item.image_url;img.alt=(item.title||'Client')+' project preview';img.loading='lazy';img.style.cssText='width:100%;height:225px;object-fit:cover;display:block;background:#091a34';art.append(img)}
    const info=document.createElement('div');info.className='work-info';
    const meta=document.createElement('div');meta.className='work-meta';
    const type=document.createElement('span');type.textContent=(item.category||'CREATIVE WORK').toUpperCase();
