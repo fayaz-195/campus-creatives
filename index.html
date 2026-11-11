@@ -564,7 +564,7 @@ header:after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:va
   const second=first.cloneNode(true);second.setAttribute('aria-hidden','true');
   first.style.marginRight='100vw';
   track.replaceChildren(first,second);
-  track.style.cssText='display:flex;align-items:center;width:max-content;gap:0;animation:ccLogoScroll 7s linear infinite';
+  track.style.cssText='display:flex;align-items:center;width:max-content;gap:0;animation:ccLogoScroll 10s linear infinite';
   const width=first.getBoundingClientRect().width+window.innerWidth;
   track.style.setProperty('--cc-logo-distance',width+'px');
   if(!document.getElementById('ccLogoScrollKeyframes')){
